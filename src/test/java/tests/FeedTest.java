@@ -12,6 +12,7 @@ public class FeedTest extends TestFeedAbstract {
   @Test
   public void verifySubscriptionWithEmptyEmail() {
     feedPage.hitSubscribe();
+    System.out.println(feedPage.error());
     assertTrue(feedData.validation().emptyMessage().equalsIgnoreCase(feedPage.error()));
   }
 
