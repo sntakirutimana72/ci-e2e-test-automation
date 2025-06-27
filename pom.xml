@@ -88,11 +88,15 @@
         <configuration>
           <includes>
             <include>**/*Test.java</include>
-            <useModulePath>false</useModulePath>
           </includes>
+          <useModulePath>false</useModulePath>
           <systemPropertyVariables>
             <application.properties>/application.properties</application.properties>
           </systemPropertyVariables>
+          <printSummary>true</printSummary>
+          <reportFormat>brief</reportFormat>
+          <useFile>false</useFile> <!-- Logs go to console (visible in GitHub Actions) -->
+          <redirectTestOutputToFile>false</redirectTestOutputToFile>
         </configuration>
       </plugin>
 
