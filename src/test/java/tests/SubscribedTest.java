@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestSubscribed extends TestFeedAbstract {
+public class SubscribedTest extends TestFeedAbstract {
 
   private Subscribed assertHasSubscribed() {
     Subscribed subscribed = feedPage.subscribe(feedData.subscribe().validEmail());

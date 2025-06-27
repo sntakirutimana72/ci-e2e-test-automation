@@ -6,7 +6,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestFeed extends TestFeedAbstract {
+public class FeedTest extends TestFeedAbstract {
 
   @Tag("Validation")
   @Test
