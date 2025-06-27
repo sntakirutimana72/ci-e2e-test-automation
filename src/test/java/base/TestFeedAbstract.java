@@ -5,7 +5,6 @@ import com.pojo.RootData;
 import com.pojo.feed.FeedData;
 import com.util.YamlDataLoader;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
