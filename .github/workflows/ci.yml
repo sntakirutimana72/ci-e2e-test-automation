@@ -18,15 +18,7 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: ":hourglass_flowing_sand: *CI Job Started*"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: ":gear: *Workflow:* ${{ github.workflow }}\n:wrench: *Job:* ${{ github.job }}\n:arrow_forward: *Status:* Starting"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: ":herb: *Branch:* ${{ github.ref }}\n:bust_in_silhouette: *Author:* ${{ github.actor }}"
+                  text: ":hourglass_flowing_sand: *${{ github.workflow }} - ${{ github.job }} Job has Started*"
               - type: "section"
                 text:
                   type: "mrkdwn"
@@ -71,7 +63,7 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             blocks:
-              - type: "header"
+              - type: "section"
                 text:
                   type: "mrkdwn"
                   text: ":rocket: *CI Test Results:* ${{ env.SLACK_STATUS_ICON }}"
