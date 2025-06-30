@@ -66,6 +66,27 @@ jobs:
                     "type": "mrkdwn",
                     "text": "*Branch:* ${{ github.ref }} \n*Commit:* ${{ github.sha }} \n*Author:* ${{ github.actor }}"
                   }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Commit message:*\n `${{ github.event.head_commit.message }}`"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":link: *<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Test summary (last lines):*\n"
+                  }
                 }
               ]
             }
