@@ -51,7 +51,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "*CI Test Results*: ${{ env.SLACK_STATUS_ICON }}",
+              "text": "*CI Test Results*: ${{ toJSON(env.SLACK_STATUS_ICON) }}",
               "blocks": [
                 {
                   "type": "section",
