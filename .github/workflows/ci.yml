@@ -32,7 +32,7 @@ jobs:
         with:
           payload: |
             {
-              "text": ":rocket: Build *${{ job.status }}* for `${{ github.repository }}` on `${{ github.ref_name }}`"
+              "text": ":rocket: Test ✅ PASSED *${{ job.status }}*"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
