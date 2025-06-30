@@ -51,44 +51,44 @@ jobs:
         with:
           payload: |
             {
-              "text": "*CI Test Results*: ${{ env.SLACK_STATUS_ICON }}",
+              "text": ${{ toJson(format("*CI Test Results*: {0}", env.SLACK_STATUS_ICON)) }},
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ env.SLACK_STATUS_ICON }} *CI Workflow:* `${{ github.workflow }}`\n*Job:* `${{ github.job }}`\n*Status:* *${{ job.status }}*"
+                    "text": ${{ toJson(format("{0} *CI Workflow:* `{1}`\n*Job:* `{2}`\n*Status:* *{3}*", env.SLACK_STATUS_ICON, github.workflow, github.job, job.status)) }}
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Branch:* `${{ github.ref }}`\n*Commit:* `${{ github.sha }}`\n*Author:* `${{ github.actor }}`"
+                    "text": ${{ toJson(format("*Branch:* `{0}`\n*Commit:* `{1}`\n*Author:* `{2}`", github.ref, github.sha, github.actor)) }}
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Commit message:*\n`${{ github.event.head_commit.message }}`"
+                    "text": ${{ toJson(format("*Commit message:*\n`{0}`", github.event.head_commit.message)) }}
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":link: *<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>*"
+                    "text": ${{ toJson(format(":link: *<{0}/{1}/actions/runs/{2}|View workflow run>*", github.server_url, github.repository, github.run_id)) }}
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Test summary (last lines):*\n```${{ env.SLACK_TEST_SUMMARY }}```"
+                    "text": ${{ toJson(format("*Test summary (last lines):*\n```{0}```", env.SLACK_TEST_SUMMARY)) }}
                   }
                 }
-              ]
-            }
+            ]
+          }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
