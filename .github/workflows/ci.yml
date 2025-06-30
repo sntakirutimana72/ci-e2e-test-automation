@@ -51,51 +51,7 @@ jobs:
         with:
           payload: |
             {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*CI Test Results*: ${{ toJSON(env.SLACK_STATUS_ICON) }}",
-                    "emoji": true
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*CI Workflow:* ${{ github.workflow }} \n*Job:* ${{ github.job }} \n*Status:* *${{ job.status }}*"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Branch:* ${{ github.ref }} \n*Commit:* ${{ github.sha }} \n*Author:* ${{ github.actor }}"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Commit message:*\n `${{ github.event.head_commit.message }}`"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":link: *<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>*"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Test summary (last lines):*\n```${{ env.SLACK_TEST_SUMMARY }}```"
-                  }
-                }
-              ]
+              "text": "*CI Test Results*: ${{ toJSON(env.SLACK_STATUS_ICON) }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
