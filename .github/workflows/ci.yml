@@ -70,11 +70,11 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: ":gear: *CI Workflow:* ${{ github.workflow }}\n  :wrench: *Job:* ${{ github.job }}\n  :bar_chart: *Status: ${{ job.status }}*"
+                  text: ":gear: *CI Workflow:* `${{ github.workflow }}`\n  :wrench: *Job:* `${{ github.job }}`\n  :bar_chart: *Status: `${{ job.status }}`*"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: ":herb: *Branch:* ${{ github.ref }}\n  :memo: *Commit:* ${{ github.sha }}\n  :bust_in_silhouette: *Author:* ${{ github.actor }}"
+                  text: ":herb: *Branch:* `${{ github.ref }}`\n  :memo: *Commit:* `${{ github.sha }}`\n  :bust_in_silhouette: *Author:* `${{ github.actor }}`"
               - type: "section"
                 text:
                   type: "mrkdwn"
