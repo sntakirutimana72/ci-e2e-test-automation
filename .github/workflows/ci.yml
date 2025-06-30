@@ -85,7 +85,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJson('*Test summary (last lines):*\n```' + env.SLACK_TEST_SUMMARY + '```') }}
+                    "text": "*Test summary (last lines):*\n\`\`\`${{ env.SLACK_TEST_SUMMARY }}\`\`\`"
                   }
                 }
               ]
