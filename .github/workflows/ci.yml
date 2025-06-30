@@ -88,7 +88,7 @@ jobs:
                     "text": ${{ toJson(format("*Test summary (last lines):*\n```{0}```", env.SLACK_TEST_SUMMARY)) }}
                   }
                 }
-            ]
-          }
+              ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
