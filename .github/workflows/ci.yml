@@ -31,11 +31,11 @@ jobs:
         if: success()
         run: 'echo "SLACK_STATUS_ICON=:white_check_mark: PASSED" >> $GITHUB_ENV'
 
-      - name: Set emoji for failure
+      - name: Set failure icon
         if: failure()
         run: 'echo "SLACK_STATUS_ICON=:x: FAILED" >> $GITHUB_ENV'
 
-      - name: Set emoji for cancelled
+      - name: Set cancellation icon
         if: cancelled()
         run: 'echo "SLACK_STATUS_ICON=:warning: CANCELLED" >> $GITHUB_ENV'
 
@@ -51,7 +51,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "*CI Test Results*: ${{ toJSON(env.SLACK_STATUS_ICON) }}",
+              "text": "*CI Test Results*",
               "blocks": [
                 {
                   "type": "section",
