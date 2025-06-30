@@ -51,7 +51,7 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text": "*CI Workflow:* ${{ github.workflow }}\n*Job:* ${{ github.job }}\n*Status: ${{ job.status }}*"
+                  text: "*CI Workflow:* ${{ github.workflow }}\n*Job:* ${{ github.job }}\n*Status: ${{ job.status }}*"
               - type: "section"
                 text:
                   type: "mrkdwn"
