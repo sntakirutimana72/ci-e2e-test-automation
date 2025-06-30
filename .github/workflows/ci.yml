@@ -52,17 +52,14 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text": "*CI Workflow:* ${{ github.workflow }}\n*Job:* ${{ github.job }}\n*Status: ${{ job.status }}*"
-              
               - type: "section"
                 text:
                   type: "mrkdwn"
                   text: "*Branch:* ${{ github.ref }}\n*Commit:* ${{ github.sha }}\n*Author:* ${{ github.actor }}"
-                
               - type: "section"
                 text:
                   type: "mrkdwn"
                   text: "*Commit message:*\n`${{ github.event.head_commit.message }}`"
-              
               - type: "section"
                 text:
                   type: "mrkdwn"
