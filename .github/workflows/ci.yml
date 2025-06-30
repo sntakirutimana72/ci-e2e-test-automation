@@ -51,41 +51,41 @@ jobs:
         with:
           payload: |
             {
-              "text": ${{ toJson("*CI Test Results*: " + env.SLACK_STATUS_ICON) }},
+              "text": "*CI Test Results*: ${{ env.SLACK_STATUS_ICON) }}",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJson("*CI Workflow:* `" + github.workflow + "`\n*Job:* `" + github.job + "`\n*Status:* *" + job.status + "*") }}
+                    "text": "*CI Workflow:* ${{ github.workflow }} \n*Job:* ${{ github.job }} \n*Status:* *${{ job.status }}*"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJson("*Branch:* `" + github.ref + "`\n*Commit:* `" + github.sha + "`\n*Author:* `" + github.actor + "`") }}
+                    "text": "*Branch:* ${{ github.ref }} \n*Commit:* ${{ github.sha }} \n*Author:* ${{ github.actor }}"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJson("*Commit message:*\n`" + github.event.head_commit.message + "`") }}
+                    "text": "*Commit message:*\n `${{ github.event.head_commit.message }}`"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJson(":link: *<" + github.server_url + "/" + github.repository + "/actions/runs/" + github.run_id + "|View workflow run>*") }}
+                    "text": ":link: *<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>*"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJson("*Test summary (last lines):*\n```" + env.SLACK_TEST_SUMMARY + "```") }}
+                    "text": "*Test summary (last lines):*\n```${{ env.SLACK_TEST_SUMMARY }}```"
                   }
                 }
               ]
