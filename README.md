@@ -56,10 +56,21 @@ Building CI pipeline for e2e test automation with Selenium &amp; Java
 To get started with local setup, do the following:
 
 1. Install **JDK 17**
-2. Install **IntelliJ IDEA**
-3. Clone project repo ([link](https://github.com/sntakirutimana72/ci-e2e-test-automation))
-4. Open cloned project with **IntelliJ IDEA**
-5. In **IntelliJ IDE** terminal, run 
+2. Install all required browsers: `Chrome`, `Firefox`, `Edge`
+3. Install **IntelliJ IDEA**
+4. Clone project repo ([link](https://github.com/sntakirutimana72/ci-e2e-test-automation))
+5. Open cloned project with **IntelliJ IDEA**
+6. In **IntelliJ IDE** terminal, run 
   ```shell
   mvn clean test
+  ```
+
+  Generate an Allure report locally:
+  ```shell
+  mvn allure:report
+  ```
+
+  Serve an Allure report locally:
+  ```shell
+  mvn allure:serve
   ```
