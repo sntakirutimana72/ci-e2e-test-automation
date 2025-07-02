@@ -1,30 +1,34 @@
-![Tests](https://github.com/sntakirutimana72/ci-e2e-test-automation/actions/workflows/ci.yml/badge.svg)
-[![Coverage](https://coveralls.io/repos/github/sntakirutimana72/ci-e2e-test-automation/badge.svg?branch=main)](https://coveralls.io/github/sntakirutimana72/ci-e2e-test-automation?branch=main)
+![Tests](https://github.com/sntakirutimana72/ci-e2e-test-automation/actions/workflows/xyz-bank-ci.yml/badge.svg)
+[![Coverage](https://coveralls.io/repos/github/sntakirutimana72/ci-e2e-test-automation/badge.svg?branch=xyz-bank-app)](https://coveralls.io/github/sntakirutimana72/ci-e2e-test-automation?branch=xyz-bank-app)
+[![Test Plan](https://img.shields.io/badge/Test%20Plan-blue)](https://docs.google.com/document/d/1eiAHBsRM5-_U27YXNVEwNpt8n-Yd1MGtNuDMV2GEbf0/edit?tab=t.0)
 
-# Test Automation with Selenium WebDriver
+# Test Automation with Selenium WebDriver for `XYZ Bank App`
 
 Building CI pipeline for e2e test automation with Selenium &amp; Java
 
 ## Objectives
 
-- **Set Up Selenium WebDriver**:
-  Learn how to install and configure **Selenium WebDriver** with **ChromeDriver** for automated browser testing.
+- **Configure Selenium for Cross-Browser Parallel Testing**:
+  Learn how to leverage **Selenium** various browser drivers for automated cross-browser testing.
 
-- **Implement JUnit 5 for Test Execution**:
-  Use **JUnit 5** annotations to structure test cases effectively.
+- **Implement TestNG for Test Execution**:
+  Use **TestNG** annotations to structure test cases effectively.
 
-- **Automate a Simple Web Test** – Write and execute a **basic UI test**.
+- **Implement Allure for Test Execution Reporting**:
+  Use **Allure** annotations to structure test cases effectively and capture test results.
+
+- **Automate Web Test** – Write and execute **UI tests**.
 - Set up a **Continuous Integration (CI) pipeline** using **GitHub Actions** to automate **Selenium tests**.
-- **PROJECT: Selenium WebDriver Setup and Basic UI Testing**
+- **PROJECT: Selenium WebDriver Setup and cross-browser UI Testing**
 
 ## Overview:
 
 1. **Setup and configuration**
    - Maven
-   - Add Selenium WebDriver and Junit 5 dependencies in the pom.xml
+   - Add Selenium WebDriver, TestNG, and Allure dependencies in the pom.xml
 
-2. **Basic Automated Test**
-   - Launch and test using Selenium WebDriver – `Newsletter sign-up form with success message` project
+2. **Parallel Cross-Browser Automated Testing**
+   - Launch and test using Selenium WebDriver – `XYZ Bank` project
 
 3. **Implement Page Object Model (POM)**
    - Create separate Page Classes for each page.
@@ -35,12 +39,13 @@ Building CI pipeline for e2e test automation with Selenium &amp; Java
    - Create a `.github/workflows/ci.yml` configuration for GitHub Actions.
    - Ensure the workflow is triggered on code push or pull request events.
    - Set up the CI pipeline to automatically install dependencies and run the tests with GitHub Actions.
-   - Set up notifications (via email or Slack) to notify a team of build status (pass/fail).
+   - Set up notifications (Slack) to notify a team of build status (pass/fail).
    - Ensure GitHub Actions logs include detailed information on test execution
+   - Publish Allure test results with `gh-pages`
 
 ## Technologies
 - Java `17+`
-- Selenium `4.25.0`
+- Selenium `4.33.0`
 - Intellij IDE
 - Git `2.43.0`
 - GitHub
@@ -56,5 +61,5 @@ To get started with local setup, do the following:
 4. Open cloned project with **IntelliJ IDEA**
 5. In **IntelliJ IDE** terminal, run 
   ```shell
-  mvn test
+  mvn clean test
   ```

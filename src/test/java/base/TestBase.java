@@ -1,25 +1,35 @@
 package base;
 
 import com.util.DriverFactory;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.openqa.selenium.WebDriver;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Step;
+import org.openqa.selenium.WebDriver;
+import org.testng.annotations.*;
+
+@Epic("Bank Account System")
 public class TestBase {
 
   protected WebDriver driver;
 
-  @BeforeEach
-  public void setup() {
-    driver = DriverFactory.chromedriver();
-
-    driver.get("https://sntakirutimana72.github.io/newsletter-lab1/");
+  @Parameters("browser")
+  @BeforeMethod
+  public void setup(@Optional("chrome") String browser) {
+    switch (browser.toLowerCase()) {
+      case "firefox" -> driver = DriverFactory.firefoxDriver();
+      case "edge" -> driver = DriverFactory.edgeDriver();
+      default -> driver = DriverFactory.chromedriver();
+    }
     driver.manage().window().maximize();
   }
 
-  @AfterEach
+  @AfterMethod
   public void teardown() {
-    driver = null;
     DriverFactory.terminate();
+  }
+
+  @Step("Navigate to {url}")
+  public void navigateTo(String url) {
+    driver.get(url);
   }
 }
