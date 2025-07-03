@@ -1,19 +1,26 @@
 package com.page;
 
+import com.util.SystemLogger;
 import com.util.WaitUtil;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
+import org.slf4j.Logger;
 
 public abstract class Base {
 
   protected final WebDriver driver;
+  protected Logger logger;
 
   public Base(WebDriver driver) {
     this.driver = driver;
+    this.logger = SystemLogger.getLogger(getClass());
+
     PageFactory.initElements(driver, this);
   }
 
@@ -29,6 +36,23 @@ public abstract class Base {
   public void hover(WebElement element) {
     Actions actions = new Actions(driver);
     actions.moveToElement(element).perform();
+  }
+
+  /**
+   * Selects an option within the specified {@link WebElement} <code>&lt;select&gt;</code> element
+   * by matching its <code>value</code> attribute.
+   * <p>
+   * This method wraps Selenium's {@link Select} functionality, allowing you to easily
+   * select dropdown options by their <code>value</code> attribute.
+   * </p>
+   *
+   * @param value         the <code>value</code> attribute of the option to be selected
+   * @param selectElement the {@link WebElement} representing the <code>&lt;select&gt;</code> element
+   * @throws org.openqa.selenium.NoSuchElementException if no option with the specified value is found
+   */
+  public static void selectByText(String value, WebElement selectElement) {
+    Select select = new Select(selectElement);
+    select.selectByVisibleText(value);
   }
 
   /**
@@ -96,5 +120,54 @@ public abstract class Base {
    */
   public void waitForDisappearance(By locator, int timeoutInSecs) {
     WaitUtil.waitForDisappearance(locator, timeoutInSecs, driver);
+  }
+
+  /**
+   * Waits until the element located by the specified {@link By} locator contains the expected text
+   * within the given timeout period.
+   * <p>
+   * This is typically used to verify that a dropdown or dynamically updated element
+   * has changed to the expected value or selection text.
+   * </p>
+   *
+   * @param locator       the {@link By} locator used to find the element
+   * @param expected      the expected text to be present in the element
+   * @throws org.openqa.selenium.TimeoutException if the expected text does not appear within the timeout
+   */
+  public void waitForTextVisibility(By locator, String expected) {
+    WaitUtil.waitForTextVisibility(locator, expected, 2, driver);
+  }
+
+  /**
+   * Waits until the specified {@link WebElement} contains the expected text
+   * within the given timeout period.
+   * <p>
+   * This is commonly used to wait for a dropdown selection or a dynamically updated
+   * field to display the expected text.
+   * </p>
+   *
+   * @param element       the {@link WebElement} to check for the expected text
+   * @param expected      the expected text to be present in the element
+   * @throws org.openqa.selenium.TimeoutException if the expected text does not appear within the timeout
+   */
+  public void waitForTextVisibility(WebElement element, String expected) {
+    WaitUtil.waitForTextVisibility(element, expected, 5, driver);
+  }
+
+  /**
+   * Waits explicitly for a JavaScript alert to be present on the page within the specified timeout.
+   * <p>
+   * This method uses Selenium's WebDriverWait to poll for the presence of an alert dialog
+   * (such as alerts triggered by JavaScript's <code>alert()</code>, <code>confirm()</code>, or <code>prompt()</code>).
+   * Once detected, it returns the Selenium {@link Alert} object, allowing further actions like
+   * {@link Alert#getText()}, {@link Alert#accept()}, or {@link Alert#dismiss()}.
+   * </p>
+   *
+   * @param timeoutInSecs the maximum time to wait in seconds for the alert to appear
+   * @return the {@link Alert} object once it becomes present
+   * @throws org.openqa.selenium.TimeoutException if the alert does not appear within the timeout
+   */
+  public Alert waitForAlertPresence(int timeoutInSecs) {
+    return WaitUtil.waitForAlertPresence(driver, timeoutInSecs);
   }
 }

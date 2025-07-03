@@ -1,5 +1,6 @@
 package com.util;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -127,6 +128,62 @@ public class WaitUtil {
    */
   public static void waitForDisappearance(By locator, int timeoutInSecs, WebDriver driver) {
     wait(timeoutInSecs, driver).until(ExpectedConditions.invisibilityOfElementLocated(locator));
+  }
+
+  /**
+   * Waits until the element located by the specified {@link By} locator contains the expected text
+   * within the given timeout period.
+   * <p>
+   * This is typically used to verify that a dropdown or dynamically updated element
+   * has changed to the expected value or selection text.
+   * </p>
+   *
+   * @param locator       the {@link By} locator used to find the element
+   * @param expected      the expected text to be present in the element
+   * @param timeoutInSecs the maximum time to wait in seconds for the expected text to appear
+   * @param driver        the {@link WebDriver} instance used to perform the wait
+   * @throws org.openqa.selenium.TimeoutException if the expected text does not appear within the timeout
+   */
+  public static void waitForTextVisibility(By locator, String expected, int timeoutInSecs, WebDriver driver) {
+    wait(timeoutInSecs, driver)
+      .until(ExpectedConditions.textToBePresentInElementLocated(locator, expected));
+  }
+
+  /**
+   * Waits until the specified {@link WebElement} contains the expected text
+   * within the given timeout period.
+   * <p>
+   * This is commonly used to wait for a dropdown selection or a dynamically updated
+   * field to display the expected text.
+   * </p>
+   *
+   * @param element       the {@link WebElement} to check for the expected text
+   * @param expected      the expected text to be present in the element
+   * @param timeoutInSecs the maximum time to wait in seconds for the expected text to appear
+   * @param driver        the {@link WebDriver} instance used to perform the wait
+   * @throws org.openqa.selenium.TimeoutException if the expected text does not appear within the timeout
+   */
+  public static void waitForTextVisibility(WebElement element, String expected, int timeoutInSecs, WebDriver driver) {
+    wait(timeoutInSecs, driver)
+      .until(ExpectedConditions.textToBePresentInElement(element, expected));
+  }
+
+  /**
+   * Waits explicitly for a JavaScript alert to be present on the page within the specified timeout.
+   * <p>
+   * This method uses Selenium's WebDriverWait to poll for the presence of an alert dialog
+   * (such as alerts triggered by JavaScript's <code>alert()</code>, <code>confirm()</code>, or <code>prompt()</code>).
+   * Once detected, it returns the Selenium {@link Alert} object, allowing further actions like
+   * {@link Alert#getText()}, {@link Alert#accept()}, or {@link Alert#dismiss()}.
+   * </p>
+   *
+   * @param driver the instance of {@link WebDriver} controlling the browser
+   * @param timeoutInSecs the maximum time to wait in seconds for the alert to appear
+   * @return the {@link Alert} object once it becomes present
+   * @throws org.openqa.selenium.TimeoutException if the alert does not appear within the timeout
+   */
+  public static Alert waitForAlertPresence(WebDriver driver, int timeoutInSecs) {
+    return wait(timeoutInSecs, driver).until(ExpectedConditions.alertIsPresent());
   }
 }
 
