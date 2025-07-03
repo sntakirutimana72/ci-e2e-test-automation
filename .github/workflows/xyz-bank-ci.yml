@@ -1,6 +1,11 @@
 name: XYZ Bank CI
 run-name: Cross-Browser Testing with Allure
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 on:
   push:
     branches: [ xyz-bank-app ]
