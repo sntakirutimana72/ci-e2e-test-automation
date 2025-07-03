@@ -7,7 +7,6 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
@@ -22,20 +21,6 @@ public abstract class Base {
     this.logger = SystemLogger.getLogger(getClass());
 
     PageFactory.initElements(driver, this);
-  }
-
-  /**
-   * Moves the mouse cursor over the specified {@link WebElement}, triggering any hover events
-   * such as tooltips or dropdown menus.
-   * <p>
-   * This method is useful for testing UI behaviors that rely on hover interactions.
-   * </p>
-   *
-   * @param element the {@link WebElement} to hover over
-   */
-  public void hover(WebElement element) {
-    Actions actions = new Actions(driver);
-    actions.moveToElement(element).perform();
   }
 
   /**
@@ -87,55 +72,6 @@ public abstract class Base {
    */
   public void waitForVisibility(WebElement element, int timeoutInSecs) {
     WaitUtil.waitForVisibility(element, timeoutInSecs, driver);
-  }
-
-  /**
-   * Waits until the specified {@link WebElement} is no longer visible on the page
-   * within the given timeout period.
-   * <p>
-   * This method is a wrapper around {@link WaitUtil#waitForDisappearance(WebElement, int, WebDriver)},
-   * using the current {@link WebDriver} instance.
-   * </p>
-   *
-   * @param element       the {@link WebElement} to wait for the disappearance
-   * @param timeoutInSecs the maximum time to wait in seconds for the element to become invisible
-   * @throws org.openqa.selenium.TimeoutException if the element does not disappear within the timeout
-   * @throws org.openqa.selenium.StaleElementReferenceException if the element is no longer attached to the DOM
-   */
-  public void waitForDisappearance(WebElement element, int timeoutInSecs) {
-    WaitUtil.waitForDisappearance(element, timeoutInSecs, driver);
-  }
-
-  /**
-   * Waits until the element located by the specified {@link By} locator is no longer visible
-   * on the page within the given timeout period.
-   * <p>
-   * This method is a wrapper around {@link WaitUtil#waitForDisappearance(By, int, WebDriver)},
-   * using the class's current {@link WebDriver} instance.
-   * </p>
-   *
-   * @param locator       the {@link By} locator used to find the element to wait for the disappearance
-   * @param timeoutInSecs the maximum time to wait in seconds for the element to become invisible
-   * @throws org.openqa.selenium.TimeoutException if the element does not disappear within the timeout
-   */
-  public void waitForDisappearance(By locator, int timeoutInSecs) {
-    WaitUtil.waitForDisappearance(locator, timeoutInSecs, driver);
-  }
-
-  /**
-   * Waits until the element located by the specified {@link By} locator contains the expected text
-   * within the given timeout period.
-   * <p>
-   * This is typically used to verify that a dropdown or dynamically updated element
-   * has changed to the expected value or selection text.
-   * </p>
-   *
-   * @param locator       the {@link By} locator used to find the element
-   * @param expected      the expected text to be present in the element
-   * @throws org.openqa.selenium.TimeoutException if the expected text does not appear within the timeout
-   */
-  public void waitForTextVisibility(By locator, String expected) {
-    WaitUtil.waitForTextVisibility(locator, expected, 2, driver);
   }
 
   /**

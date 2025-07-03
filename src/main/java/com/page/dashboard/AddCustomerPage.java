@@ -2,7 +2,6 @@ package com.page.dashboard;
 
 import com.page.Base;
 import io.qameta.allure.Step;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

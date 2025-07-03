@@ -50,15 +50,4 @@ public class CustomerDashboardPage extends Base {
       return false;
     }
   }
-
-  public boolean isNoAccountLoaded() {
-    try {
-      waitForVisibility(new By.ByXPath(
-        "//span[contains(., 'Please open an account with us.')]"), 10);
-      return true;
-    } catch (Exception e) {
-      logger.error(e.getMessage());
-      return false;
-    }
-  }
 }

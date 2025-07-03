@@ -31,10 +31,6 @@ public class WithdrawalPage extends Base {
     submitButton.click();
   }
 
-  public WithdrawalPage withdraw(int amount) {
-    return withdraw(String.valueOf(amount));
-  }
-
   public WithdrawalPage withdraw(String amount) {
     enterAmount(amount);
     submit();

@@ -1,14 +1,14 @@
 name: XYZ Bank CI
 run-name: Cross-Browser Testing with Allure
 
+on:
+  push:
+    branches: [ xyz-bank-app ]
+
 permissions:
   contents: write
   pages: write
   id-token: write
-
-on:
-  push:
-    branches: [ xyz-bank-app ]
 
 jobs:
   test:
@@ -19,27 +19,6 @@ jobs:
       fail-fast: false
 
     steps:
-      # Send Slack notification that job is starting
-      - name: Slack Notification - Job Starting
-        uses: slackapi/slack-github-action@v2.1.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: ":hourglass_flowing_sand: *${{ github.workflow }} - ${{ matrix.browser }} Job Starting*"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: ":computer: *Browser:* `${{ matrix.browser }}`\n:gear: *Workflow:* `${{ github.workflow }}`\n:herb: *Branch:* `${{ github.ref }}`"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: ":link: *<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>*"
-
       # Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -77,7 +56,7 @@ jobs:
       # Run tests with browser-specific configuration
       - name: Run tests - ${{ matrix.browser }}
         run: |
-          mvn clean test -Dbrowser=${{ matrix.browser }} -Dheadless=true
+          mvn clean test -Dbrowser=${{ matrix.browser }}
         continue-on-error: true
 
       # Upload browser-specific results
@@ -148,23 +127,6 @@ jobs:
     if: always()
 
     steps:
-      # Send Slack notification that report generation is starting
-      - name: Slack Notification - Report Generation Starting
-        uses: slackapi/slack-github-action@v2.1.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: ":bar_chart: *Allure Report Generation Starting*"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: ":link: *<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>*"
-
       - name: Checkout repository
         uses: actions/checkout@v4
 

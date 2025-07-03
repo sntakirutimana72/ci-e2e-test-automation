@@ -31,10 +31,6 @@ public class DepositPage extends Base {
     submitButton.click();
   }
 
-  public DepositPage deposit(int amount) {
-    return deposit(String.valueOf(amount));
-  }
-
   public DepositPage deposit(String amount) {
     enterAmount(amount);
     submit();
