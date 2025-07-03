@@ -9,11 +9,7 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
-import java.util.Objects;
-
 public class DriverFactory {
-
-  private static WebDriver driver;
 
   private DriverFactory() {
     // Prevent instantiation of this class
@@ -26,37 +22,26 @@ public class DriverFactory {
     // Setup browser driver automatically
     WebDriverManager.chromedriver().setup();
     // Initiate an instance of the browser driver
-    driver = new ChromeDriver(options);
-
-    return driver;
+    return new ChromeDriver(options);
   }
 
   public static WebDriver firefoxDriver() {
     // Default browser options
     FirefoxOptions options = new FirefoxOptions();
-    options.addArguments("--headless=new");
+    options.addArguments("--headless");
     // Setup browser driver automatically
     WebDriverManager.firefoxdriver().setup();
     // Initiate an instance of the browser driver
-    driver = new FirefoxDriver(options);
-
-    return driver;
+    return new FirefoxDriver(options);
   }
 
   public static WebDriver edgeDriver() {
     // Default browser options
     EdgeOptions options = new EdgeOptions();
-    options.addArguments("--headless=new");
+    options.addArguments("--headless");
     // Setup browser driver automatically
     WebDriverManager.edgedriver().setup();
     // Initiate an instance of the browser driver
-    driver = new EdgeDriver(options);
-
-    return driver;
-  }
-
-  public static void terminate() {
-    if (Objects.nonNull(driver))
-      driver.quit();
+    return new EdgeDriver(options);
   }
 }
