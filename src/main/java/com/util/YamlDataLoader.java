@@ -1,6 +1,6 @@
 package com.util;
 
-import com.pojo.RootData;
+import com.pojo.RootDataPojo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -13,11 +13,11 @@ public class YamlDataLoader {
     // Prevent instantiation
   }
 
-  public static RootData loadTestData() {
+  public static RootDataPojo loadTestData() {
     try (InputStream yis = YamlDataLoader.class.getClassLoader().getResourceAsStream("test_data.yaml")) {
       ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-      return mapper.readValue(yis, RootData.class);
+      return mapper.readValue(yis, RootDataPojo.class);
     } catch (Exception e) {
       throw new RuntimeException("Failed to load YAML test data", e);
     }
