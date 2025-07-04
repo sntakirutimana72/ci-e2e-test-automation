@@ -8,6 +8,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 import java.util.Objects;
@@ -33,6 +34,11 @@ public class BaseTest {
       default -> driver.set(DriverFactory.chromedriver());
     }
     getDriver().manage().window().maximize();
+  }
+
+  @BeforeMethod(dependsOnMethods = "setup")
+  public void storeDriverInResult(ITestResult result) {
+    result.setAttribute("webdriver", getDriver());
   }
 
   @Step("Go to {url}")

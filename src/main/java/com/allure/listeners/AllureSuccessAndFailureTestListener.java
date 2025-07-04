@@ -114,40 +114,19 @@ public class AllureSuccessAndFailureTestListener implements ITestListener {
   }
 
   private WebDriver getDriverFromTestClass(Object testClass) {
-    try {
-      // Try common field names for WebDriver
-      String[] possibleDriverFields = {"driver", "webDriver", "browserDriver"};
-
-      for (String fieldName : possibleDriverFields) {
-        try {
-          java.lang.reflect.Field driverField = testClass.getClass().getDeclaredField(fieldName);
-          driverField.setAccessible(true);
-          Object fieldValue = driverField.get(testClass);
-          if (fieldValue instanceof WebDriver) {
-            return (WebDriver) fieldValue;
-          }
-        } catch (NoSuchFieldException ignored) {}
-      }
-
-      // If not found in current class, try parent classes
-      Class<?> parentClass = testClass.getClass().getSuperclass();
-      while (parentClass != null) {
-        for (String fieldName : possibleDriverFields) {
-          try {
-            java.lang.reflect.Field driverField = parentClass.getDeclaredField(fieldName);
-            driverField.setAccessible(true);
-            Object fieldValue = driverField.get(testClass);
-            if (fieldValue instanceof WebDriver) {
-              return (WebDriver) fieldValue;
-            }
-          } catch (NoSuchFieldException ignored) {}
-        }
-        parentClass = parentClass.getSuperclass();
-      }
-
-    } catch (Exception e) {
-      System.err.println("Failed to get WebDriver from test class: " + e.getMessage());
+    if (testClass instanceof ITestResult) {
+      return (WebDriver) ((ITestResult) testClass).getAttribute("webdriver");
     }
-    return null;
+
+    // Fallback to reflection for ThreadLocal
+    try {
+      java.lang.reflect.Field driverField = testClass.getClass().getDeclaredField("driver");
+      driverField.setAccessible(true);
+      ThreadLocal<WebDriver> driverThreadLocal = (ThreadLocal<WebDriver>) driverField.get(testClass);
+      return driverThreadLocal.get();
+    } catch (Exception e) {
+      System.err.println("Failed to get WebDriver: " + e.getMessage());
+      return null;
+    }
   }
 }

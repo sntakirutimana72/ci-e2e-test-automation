@@ -275,19 +275,16 @@ jobs:
           name: jacoco-edge
           path: ./jacoco-files
 
-      # Merge exec files using Maven JaCoCo plugin
+      # Merge exec files
       - name: Merge JaCoCo exec files
-        run: |
-          mvn org.jacoco:jacoco-maven-plugin:0.8.12:merge \
-            -DexecFiles=jacoco-files/jacoco-chrome.exec,jacoco-files/jacoco-firefox.exec,jacoco-files/jacoco-edge.exec \
-            -DdestFile=target/jacoco-merged.exec
+        run: mvn jacoco:merge
 
       # Generate a report from merged exec
       - name: Generate merged JaCoCo report
         run: |
-          mvn org.jacoco:jacoco-maven-plugin:0.8.12:report \
-            -DdataFile=target/jacoco-merged.exec \
-            -DoutputDirectory=target/site/jacoco
+          mvn jacoco:report \
+          -DdataFile=target/jacoco-merged.exec \
+          -DoutputDirectory=target/site/jacoco
 
       # Upload merged XML to Coveralls
       - name: Upload coverage report to Coveralls
