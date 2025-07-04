@@ -48,10 +48,22 @@ public class BaseTest {
 
   @AfterMethod
   public void teardown() {
-    if (Objects.nonNull(getDriver())) {
-      getDriver().quit();
-      driver.remove();
+    WebDriver currentDriver = driver.get();
+    if (currentDriver != null) {
+      try {
+        currentDriver.manage().deleteAllCookies();
+        currentDriver.quit();
+      } catch (Exception e) {
+        logger.error("Error during driver cleanup: {}", e.getMessage());
+      } finally {
+        driver.remove();
+      }
     }
+  }
+
+  @AfterClass
+  public void cleanupThreadLocal() {
+    driver.remove();
   }
 
   protected WebDriver getDriver() {
