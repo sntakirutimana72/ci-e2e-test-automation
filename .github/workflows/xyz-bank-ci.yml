@@ -278,6 +278,8 @@ jobs:
       # Merge exec files
       - name: Merge JaCoCo exec files
         run: |
+          mkdir -p target
+          cp ./jacoco-files/* target/ 2>/dev/null || true
           mvn jacoco:merge \
             -Djacoco.fileSets[0].directory=target \
             -Djacoco.fileSets[0].includes=jacoco-*.exec \
