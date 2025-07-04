@@ -61,7 +61,7 @@ jobs:
 
       # Upload coverage report for each browser
       - name: Upload JaCoCo report - ${{ matrix.browser }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jacoco-${{ matrix.browser }}
           path: target/jacoco-${{ matrix.browser }}.exec
