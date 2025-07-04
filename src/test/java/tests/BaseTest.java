@@ -24,8 +24,8 @@ public class BaseTest {
     logger = SystemLogger.getLogger(getClass());
   }
 
-  @BeforeMethod
   @Parameters("browser")
+  @BeforeMethod
   public void setup(String browser) {
     switch (browser.toLowerCase()) {
       case "firefox" -> driver.set(DriverFactory.firefoxDriver());

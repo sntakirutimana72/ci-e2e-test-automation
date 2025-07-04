@@ -130,6 +130,9 @@
             <goals>
               <goal>prepare-agent</goal>
             </goals>
+            <configuration>
+              <destFile>${jacoco.destFile}</destFile>
+            </configuration>
             <phase>initialize</phase>
           </execution>
           <execution>

@@ -56,7 +56,9 @@ jobs:
       # Run tests with browser-specific configuration
       - name: Run tests - ${{ matrix.browser }}
         run: |
-          mvn clean test jacoco:report -Djacoco.destFile=target/jacoco-${{ matrix.browser }}.exec
+          mvn clean test \
+            -Dbrowser=${{ matrix.browser }} \
+            -Djacoco.destFile=target/jacoco-${{ matrix.browser }}.exec
         continue-on-error: true
 
       # Upload coverage report for each browser
