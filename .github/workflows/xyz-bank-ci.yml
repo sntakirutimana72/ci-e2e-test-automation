@@ -56,8 +56,15 @@ jobs:
       # Run tests with browser-specific configuration
       - name: Run tests - ${{ matrix.browser }}
         run: |
-          mvn clean test -Dbrowser=${{ matrix.browser }}
+          mvn clean test jacoco:report -Djacoco.destFile=target/jacoco-${{ matrix.browser }}.exec
         continue-on-error: true
+
+      # Upload coverage report for each browser
+      - name: Upload JaCoCo report - ${{ matrix.browser }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-${{ matrix.browser }}
+          path: target/jacoco-${{ matrix.browser }}.exec
 
       # Upload browser-specific results
       - name: Upload Allure results - ${{ matrix.browser }}
@@ -121,7 +128,7 @@ jobs:
                   text: ":link: *<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>*"
 
   # Generate combined Allure report
-  generate-report:
+  generate-allure-report:
     runs-on: ubuntu-latest
     needs: test
     if: always()
@@ -196,14 +203,6 @@ jobs:
           publish_dir: allure-history
           force_orphan: true
 
-      # Upload coverage report if available
-      - name: Upload coverage report
-        uses: coverallsapp/github-action@v2
-        continue-on-error: true
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: target/site/jacoco/jacoco.xml
-
       # Set report generation status
       - name: Set report success icon
         if: success()
@@ -242,3 +241,95 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text: ":link: *<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>*"
+
+  generate-coverage-report:
+    runs-on: ubuntu-latest
+    needs: test
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Download all jacoco exec files
+      - name: Download Chrome exec
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: jacoco-chrome
+          path: ./jacoco-files
+
+      - name: Download Firefox exec
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: jacoco-firefox
+          path: ./jacoco-files
+
+      - name: Download Edge exec
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: jacoco-edge
+          path: ./jacoco-files
+
+      # Merge exec files using Maven JaCoCo plugin
+      - name: Merge JaCoCo exec files
+        run: |
+          mvn org.jacoco:jacoco-maven-plugin:0.8.12:merge \
+            -Djacoco.execFiles=jacoco-files/jacoco-chrome.exec,jacoco-files/jacoco-firefox.exec,jacoco-files/jacoco-edge.exec \
+            -Djacoco.destFile=target/jacoco-merged.exec
+
+      # Generate a report from merged exec
+      - name: Generate merged JaCoCo report
+        run: |
+          mvn org.jacoco:jacoco-maven-plugin:0.8.12:report \
+            -Djacoco.dataFile=target/jacoco-merged.exec \
+            -Djacoco.outputDirectory=target/site/jacoco
+
+      # Upload merged XML to Coveralls
+      - name: Upload coverage report to Coveralls
+        uses: coverallsapp/github-action@v2
+        continue-on-error: true
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: target/site/jacoco/jacoco.xml
+
+      # Set report generation status
+      - name: Set report success icon
+        if: success()
+        run: 'echo "COVERALLS_STATUS_ICON=:white_check_mark: REPORT GENERATED" >> $GITHUB_ENV'
+
+      - name: Set report failure icon
+        if: failure()
+        run: 'echo "COVERALLS_STATUS_ICON=:x: REPORT FAILED" >> $GITHUB_ENV'
+
+      - name: Set report cancellation icon
+        if: cancelled()
+        run: 'echo "COVERALLS_STATUS_ICON=:warning: REPORT CANCELLED" >> $GITHUB_ENV'
+
+      # Send final Slack notification with coverage report status
+      - name: Slack Notification - Report Generation Finished
+        if: always()
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: ":bar_chart: *Coverage Report Status:* ${{ env.COVERALLS_STATUS_ICON }}"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: ":gear: *Workflow:* `${{ github.workflow }}`\n:herb: *Branch:* `${{ github.ref }}`\n:bust_in_silhouette: *Author:* `${{ github.actor }}`"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: ":globe_with_meridians: *<https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}|View Allure Report>*"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: ":link: *<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>*"  
