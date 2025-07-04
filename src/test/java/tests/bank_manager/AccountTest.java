@@ -6,6 +6,9 @@ import com.page.dashboard.AddCustomerPage;
 import com.page.dashboard.CustomersListPage;
 import com.page.dashboard.OpenAccountPage;
 import data.AccountDataProvider;
+import io.qameta.allure.Description;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -38,6 +41,8 @@ public class AccountTest extends BankManagerBaseTest {
   @Test(dataProvider = "open", dataProviderClass = AccountDataProvider.class)
   @Scenario("Open a customer account")
   @Preconditions({"Bank app should be accessible on web"})
+  @Severity(SeverityLevel.CRITICAL)
+  @Description("Verify if a bank manager is able to open an account for a customer")
   public void verifyManagerCanOpenAccountSuccessfully(String...payload) {
     ensureAccountIsOpened(payload);
   }
@@ -45,6 +50,8 @@ public class AccountTest extends BankManagerBaseTest {
   @Test(dataProvider = "delete", dataProviderClass = AccountDataProvider.class)
   @Scenario("Delete a customer account")
   @Preconditions({"Bank app should be accessible on web"})
+  @Severity(SeverityLevel.NORMAL)
+  @Description("Verify if a bank manager is able to delete a customer account")
   public void verifyBankManagerCanDeleteCustomerAccount(String...payload) {
     ensureAccountIsOpened(payload);
 
@@ -62,8 +69,10 @@ public class AccountTest extends BankManagerBaseTest {
   }
 
   @Test(dataProvider = "defaultCurrency", dataProviderClass = AccountDataProvider.class)
-  @Scenario("Customer is mandatory to open account")
+  @Scenario("Open a customer account")
   @Preconditions({"Bank app should be accessible on web"})
+  @Severity(SeverityLevel.CRITICAL)
+  @Description("Verify if a customer profile is required to open an account")
   public void verifyCustomerIsMandatoryToOpenAccount(String currency) {
     OpenAccountPage openAccountPage = ensureOpenAccountIsLoaded();
     openAccountPage.selectCurrency(currency);
@@ -72,8 +81,10 @@ public class AccountTest extends BankManagerBaseTest {
   }
 
   @Test(dataProvider = "defaultCustomer", dataProviderClass = AccountDataProvider.class)
-  @Scenario("Currency is mandatory to open account")
+  @Scenario("Open a customer account")
   @Preconditions({"Bank app should be accessible on web"})
+  @Severity(SeverityLevel.CRITICAL)
+  @Description("Verify if currency is required to open an account")
   public void verifyCurrencyIsMandatoryToOpenAccount(String customer) {
     OpenAccountPage openAccountPage = ensureOpenAccountIsLoaded();
     openAccountPage.selectCustomer(customer);

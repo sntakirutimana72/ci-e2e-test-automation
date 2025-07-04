@@ -17,7 +17,7 @@ public abstract class BankManagerBaseTest extends BaseTest {
 
   protected BankManagerDashboardPage dashboardPage;
 
-  @BeforeMethod
+  @BeforeMethod(dependsOnMethods = "setup")
   public void initialize() {
     navigateTo("https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager");
     dashboardPage = new BankManagerDashboardPage(getDriver());

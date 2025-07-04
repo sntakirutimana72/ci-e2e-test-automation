@@ -4,6 +4,9 @@ import com.allure.annotations.Preconditions;
 import com.allure.annotations.Scenario;
 import com.page.dashboard.WithdrawalPage;
 import data.WithdrawDataProvider;
+import io.qameta.allure.Description;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -16,8 +19,10 @@ public class WithdrawFundsTest extends CustomerBaseTestWithPreconditions {
   }
 
   @Test(dataProvider = "valid", dataProviderClass = WithdrawDataProvider.class)
-  @Scenario("A customer should be able to withdraw")
+  @Scenario("Withdrawing funds")
   @Preconditions({"Bank app should be accessible on web"})
+  @Severity(SeverityLevel.CRITICAL)
+  @Description("Verify if customers can successfully withdraw their funds")
   public void verifyCustomerCanWithdrawSuccessfully(String...payload) {
     Assert.assertTrue(assurePageIsLoaded(payload[0], payload[1])
       .withdraw(payload[2])
@@ -25,8 +30,10 @@ public class WithdrawFundsTest extends CustomerBaseTestWithPreconditions {
   }
 
   @Test(dataProvider = "invalid", dataProviderClass = WithdrawDataProvider.class)
-  @Scenario("A customer should not be able to withdraw when amount is invalid")
+  @Scenario("Withdrawing funds")
   @Preconditions({"Bank app should be accessible on web"})
+  @Severity(SeverityLevel.CRITICAL)
+  @Description("Verify if amount gets validated when withdrawing")
   public void verifyCustomerCannotWithdrawWithInvalidAmount(String...payload) {
     Assert.assertFalse(assurePageIsLoaded(payload[0], payload[1])
       .withdraw(payload[2])

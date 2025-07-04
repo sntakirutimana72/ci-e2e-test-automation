@@ -26,6 +26,7 @@ public class CustomerLoginTest extends BaseTest {
   @Test(dataProvider = "withAccount", dataProviderClass = LoginDataProvider.class)
   @Scenario("Account access")
   @Preconditions({"Bank app should be accessible on web"})
+  @Severity(SeverityLevel.BLOCKER)
   @Description("Verify if customer can successfully access their own account")
   public void verifyCustomerCanAccessTheirOwnAccount(String url, String username) {
     navigateTo(url);

@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 
-import java.util.Objects;
-
 @Epic("Bank Account System")
 @Feature("Bank Account Management")
 public class BaseTest {
