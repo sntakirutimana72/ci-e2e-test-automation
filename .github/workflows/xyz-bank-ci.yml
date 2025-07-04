@@ -277,7 +277,7 @@ jobs:
 
       # Merge exec files
       - name: Merge JaCoCo exec files
-        run: mvn jacoco:merge
+        run: mvn post-integration-test -DskipTests
 
       # Generate a report from merged exec
       - name: Generate merged JaCoCo report

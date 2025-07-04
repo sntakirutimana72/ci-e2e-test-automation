@@ -144,6 +144,7 @@
           </execution>
           <execution>
             <id>merge</id>
+            <phase>post-integration-test</phase>
             <goals>
               <goal>merge</goal>
             </goals>
