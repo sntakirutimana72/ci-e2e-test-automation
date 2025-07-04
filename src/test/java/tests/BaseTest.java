@@ -16,7 +16,7 @@ import java.util.Objects;
 @Feature("Bank Account Management")
 public class BaseTest {
 
-  protected WebDriver driver;
+  private static final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
   protected Logger logger;
 
   @BeforeClass
@@ -28,21 +28,27 @@ public class BaseTest {
   @Parameters("browser")
   public void setup(@Optional("chrome") String browser) {
     switch (browser.toLowerCase()) {
-      case "firefox" -> driver = DriverFactory.firefoxDriver();
-      case "edge" -> driver = DriverFactory.edgeDriver();
-      default -> driver = DriverFactory.chromedriver();
+      case "firefox" -> driver.set(DriverFactory.firefoxDriver());
+      case "edge" -> driver.set(DriverFactory.edgeDriver());
+      default -> driver.set(DriverFactory.chromedriver());
     }
-    driver.manage().window().maximize();
+    getDriver().manage().window().maximize();
   }
 
   @Step("Go to {url}")
   public void navigateTo(String url) {
-    driver.get(url);
+    getDriver().get(url);
   }
 
   @AfterMethod
   public void teardown() {
-    if (Objects.nonNull(driver))
-      driver.quit();
+    if (Objects.nonNull(getDriver())) {
+      getDriver().quit();
+      driver.remove();
+    }
+  }
+
+  protected WebDriver getDriver() {
+    return driver.get();
   }
 }

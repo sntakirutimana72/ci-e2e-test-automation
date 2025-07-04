@@ -20,7 +20,7 @@ public class CustomerLoginTest extends BaseTest {
 
   @BeforeMethod
   public void initialize() {
-    loginPage = new CustomerLoginPage(driver);
+    loginPage = new CustomerLoginPage(getDriver());
   }
 
   @Test(dataProvider = "withAccount", dataProviderClass = LoginDataProvider.class)

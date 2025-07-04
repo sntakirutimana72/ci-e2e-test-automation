@@ -20,7 +20,7 @@ public class CustomerBaseTestWithPreconditions extends BaseTest {
     "Click `Login` button"
   })
   public CustomerDashboardPage loginPrecondition(String url, String username) {
-    CustomerLoginPage loginPage = new CustomerLoginPage(driver);
+    CustomerLoginPage loginPage = new CustomerLoginPage(getDriver());
     navigateTo(url);
     CustomerDashboardPage dashboardPage = loginPage.login(username);
     Assert.assertTrue(dashboardPage.isLoaded(username));

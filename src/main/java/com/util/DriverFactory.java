@@ -9,6 +9,8 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
+import java.util.UUID;
+
 public class DriverFactory {
 
   private DriverFactory() {
@@ -19,6 +21,7 @@ public class DriverFactory {
     // Default browser options
     ChromeOptions options = new ChromeOptions();
     options.addArguments("--headless=new");
+    options.addArguments("--user-data-dir=/tmp/chrome-profile-" + UUID.randomUUID());
     // Setup browser driver automatically
     WebDriverManager.chromedriver().setup();
     // Initiate an instance of the browser driver
@@ -38,7 +41,8 @@ public class DriverFactory {
   public static WebDriver edgeDriver() {
     // Default browser options
     EdgeOptions options = new EdgeOptions();
-    options.addArguments("--headless");
+    options.addArguments("--headless=new");
+    options.addArguments("--user-data-dir=/tmp/edge-profile-" + UUID.randomUUID());
     // Setup browser driver automatically
     WebDriverManager.edgedriver().setup();
     // Initiate an instance of the browser driver

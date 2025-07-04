@@ -20,7 +20,7 @@ public abstract class BankManagerBaseTest extends BaseTest {
   @BeforeMethod
   public void initialize() {
     navigateTo("https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager");
-    dashboardPage = new BankManagerDashboardPage(driver);
+    dashboardPage = new BankManagerDashboardPage(getDriver());
   }
 
   protected void assertSuccess(Base page, String message) {
