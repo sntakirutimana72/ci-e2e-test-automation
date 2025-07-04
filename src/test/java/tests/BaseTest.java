@@ -26,7 +26,7 @@ public class BaseTest {
 
   @BeforeMethod
   @Parameters("browser")
-  public void setup(@Optional("chrome") String browser) {
+  public void setup(String browser) {
     switch (browser.toLowerCase()) {
       case "firefox" -> driver.set(DriverFactory.firefoxDriver());
       case "edge" -> driver.set(DriverFactory.edgeDriver());
