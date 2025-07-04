@@ -124,6 +124,17 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.12</version>
+        <configuration>
+          <fileSets>
+            <fileSet>
+              <directory>${project.build.directory}</directory>
+              <includes>
+                <include>jacoco-*.exec</include>
+              </includes>
+            </fileSet>
+          </fileSets>
+          <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
+        </configuration>
         <executions>
           <execution>
             <id>prepare-agent</id>
@@ -148,17 +159,6 @@
             <goals>
               <goal>merge</goal>
             </goals>
-            <configuration>
-              <fileSets>
-                <fileSet>
-                  <directory>${project.build.directory}</directory>
-                  <includes>
-                    <include>jacoco-*.exec</include>
-                  </includes>
-                </fileSet>
-              </fileSets>
-              <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
-            </configuration>
           </execution>
         </executions>
       </plugin>
