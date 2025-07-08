@@ -1,9 +1,0 @@
-"BROKEN","EPIC","FAILED","FEATURE","PASSED","SKIPPED","STORY","UNKNOWN"
-"4","Bank Account System","0","Bank Account Management","15","15","  As a Customer,
-  I want to view my transactions, deposit funds,
-  and withdraw money so that I can manage my finances effectively.
-","0"
-"2","Bank Account System","6","Bank Account Management","18","0","  As a Bank Manager,
-  I want to add customers, create accounts,
-  and delete accounts so that I can manage customer accounts efficiently.
-","0"
