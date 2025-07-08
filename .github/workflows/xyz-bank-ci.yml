@@ -67,9 +67,15 @@ jobs:
           echo "TEST_EXIT_CODE=$?" >> $GITHUB_ENV
           set -e
 
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
       # Generate browser custom test badge
       - name: Generate ${{ github.workflow }}-${{ matrix.browser }} test badge
         run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
+    
           mkdir -p ".github/badges"
           
           TOTAL=0
@@ -147,19 +153,19 @@ jobs:
       - name: Set success icon
         if: ${{ env.TEST_EXIT_CODE }} == '0'
         run: |
-          'echo "SLACK_STATUS_ICON=:white_check_mark: PASSED" >> $GITHUB_ENV'
+          echo "SLACK_STATUS_ICON=':white_check_mark: PASSED'" >> $GITHUB_ENV
           echo "JOB_STATUS=Success" >> $GITHUB_ENV
 
       - name: Set failure icon
         if: ${{ env.TEST_EXIT_CODE }} != '0'
         run: |
-          'echo "SLACK_STATUS_ICON=:x: FAILED" >> $GITHUB_ENV'
+          echo "SLACK_STATUS_ICON=':x: FAILED'" >> $GITHUB_ENV
           echo "JOB_STATUS=Failure" >> $GITHUB_ENV
 
       - name: Set cancellation icon
         if: cancelled()
         run: |
-          'echo "SLACK_STATUS_ICON=:warning: CANCELLED" >> $GITHUB_ENV'
+          echo "SLACK_STATUS_ICON=':warning: CANCELLED'" >> $GITHUB_ENV
           echo "JOB_STATUS=Cancelled" >> $GITHUB_ENV
 
       # Send Slack notification on job completion
