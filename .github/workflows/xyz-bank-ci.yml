@@ -104,7 +104,7 @@ jobs:
             COLOR="red"
           fi
 
-          echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"${{ COLOR }}\"}" > ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
+          echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"$COLOR\"}" > ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
 
       # Upload badges
       - name: Upload test badges
