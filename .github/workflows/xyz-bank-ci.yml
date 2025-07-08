@@ -98,9 +98,9 @@ jobs:
             PERCENT=0
           fi
 
-          if [ "$PERCENT" -ge 90 ]; then
+          if [ "$PERCENT" -ge 85 ]; then
             COLOR="brightgreen"
-          elif [ "$PERCENT" -ge 70 ]; then
+          elif [ "$PERCENT" -ge 65 ]; then
             COLOR="yellow"
           else
             COLOR="red"
@@ -109,7 +109,7 @@ jobs:
           echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"$COLOR\"}" > "badges/${{ github.workflow }}-${{ matrix.browser }}.json"
 
       # Upload badges
-      - name: Upload test badges
+      - name: Upload ${{ github.workflow }}-${{ matrix.browser }} test badge
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -398,23 +398,15 @@ jobs:
           name: ${{ github.workflow }}-edge
           path: .github/badges
 
-      - name: List downloaded badges
-        run: ls -R ".github/badges"
-
       - name: Commit and push updated badges
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          git status
           git add .github/badges/*.json
-          git status
-          git diff
-          git diff --cached
           
           if git diff --cached --quiet; then
             echo "No badge changes to commit."
           else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
             git commit -m "[skip ci] Update all badges"
             git push
           fi

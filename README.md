@@ -1,6 +1,6 @@
-![Chrome Tests](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sntakirutimana72/ci-e2e-test-automation/badges/xyz-bank-ci-chrome.json)
-![Edge Tests](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sntakirutimana72/ci-e2e-test-automation/badges/xyz-bank-ci-edge.json)
-![Firefox Tests](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sntakirutimana72/ci-e2e-test-automation/badges/xyz-bank-ci-firefox.json)
+![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sntakirutimana72/ci-e2e-test-automation/refs/heads/xyz-bank-app/.github/badges/xyz-bank-ci-chrome.json)
+![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sntakirutimana72/ci-e2e-test-automation/refs/heads/xyz-bank-app/.github/badges/xyz-bank-ci-edge.json)
+![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sntakirutimana72/ci-e2e-test-automation/refs/heads/xyz-bank-app/.github/badges/xyz-bank-ci-firefox.json)
 [![Coverage](https://coveralls.io/repos/github/sntakirutimana72/ci-e2e-test-automation/badge.svg?branch=xyz-bank-app)](https://coveralls.io/github/sntakirutimana72/ci-e2e-test-automation?branch=xyz-bank-app)
 [![Test Plan](https://img.shields.io/badge/Test%20Plan-blue)](https://docs.google.com/document/d/1eiAHBsRM5-_U27YXNVEwNpt8n-Yd1MGtNuDMV2GEbf0/edit?tab=t.0)
 
