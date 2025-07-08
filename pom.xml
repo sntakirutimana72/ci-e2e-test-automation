@@ -9,6 +9,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <jacoco.agent.argLine/>
   </properties>
 
   <dependencies>
@@ -104,13 +105,10 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.5.3</version>
         <configuration>
+          <argLine>${jacoco.agent.argLine}</argLine>
           <suiteXmlFiles>
             <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
           </suiteXmlFiles>
-          <printSummary>true</printSummary>
-          <reportFormat>plain</reportFormat>
-          <useFile>false</useFile>
-          <trimStackTrace>false</trimStackTrace>
         </configuration>
       </plugin>
 

@@ -56,14 +56,18 @@ jobs:
       # Run tests with browser-specific configuration
       - name: Run tests - ${{ matrix.browser }}
         run: |
+          set +e
           mvn clean test \
             -Dbrowser=${{ matrix.browser }} \
             -Djacoco.destFile=target/jacoco-${{ matrix.browser }}.exec
+          echo "TEST_EXIT_CODE=$?" >> $GITHUB_ENV
+          set -e
         continue-on-error: true
 
       # Upload coverage report for each browser
       - name: Upload JaCoCo report - ${{ matrix.browser }}
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: jacoco-${{ matrix.browser }}
           path: target/jacoco-${{ matrix.browser }}.exec
@@ -80,7 +84,7 @@ jobs:
       # Upload screenshots on failure
       - name: Upload screenshots - ${{ matrix.browser }}
         uses: actions/upload-artifact@v4
-        if: failure()
+        if: ${{ env.TEST_EXIT_CODE }} != '0'
         with:
           name: screenshots-${{ matrix.browser }}
           path: screenshots/
@@ -88,11 +92,11 @@ jobs:
 
       # Set status icons for Slack notification
       - name: Set success icon
-        if: success()
+        if: ${{ env.TEST_EXIT_CODE }} == '0'
         run: 'echo "SLACK_STATUS_ICON=:white_check_mark: PASSED" >> $GITHUB_ENV'
 
       - name: Set failure icon
-        if: failure()
+        if: ${{ env.TEST_EXIT_CODE }} != '0'
         run: 'echo "SLACK_STATUS_ICON=:x: FAILED" >> $GITHUB_ENV'
 
       - name: Set cancellation icon
@@ -289,7 +293,6 @@ jobs:
       # Upload merged XML to Coveralls
       - name: Upload coverage report to Coveralls
         uses: coverallsapp/github-action@v2
-        continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: target/site/jacoco/jacoco.xml
