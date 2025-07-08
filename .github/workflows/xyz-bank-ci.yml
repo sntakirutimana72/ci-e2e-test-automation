@@ -73,7 +73,7 @@ jobs:
       # Generate browser custom test badge
       - name: Generate ${{ github.workflow }}-${{ matrix.browser }} test badge
         run: |
-          mkdir -p ".github/badges"
+          mkdir -p "badges"
           
           TOTAL=0
           FAILS=0
@@ -106,7 +106,7 @@ jobs:
             COLOR="red"
           fi
 
-          echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"$COLOR\"}" > ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
+          echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"$COLOR\"}" > "badges/${{ github.workflow }}-${{ matrix.browser }}.json"
 
       # Upload badges
       - name: Upload test badges
