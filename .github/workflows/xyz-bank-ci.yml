@@ -4,6 +4,8 @@ run-name: Cross-Browser Testing with Allure
 on:
   push:
     branches: [ xyz-bank-app ]
+    paths-ignore:
+      - '.github/badges/**'
 
 permissions:
   contents: write
@@ -68,7 +70,7 @@ jobs:
       # Generate browser custom test badge
       - name: Generate ${{ github.workflow }}-${{ matrix.browser }} test badge
         run: |
-          mkdir -p badges
+          mkdir -p ".github/badges"
           
           TOTAL=0
           for val in $(xmllint --xpath "count(//testcase)" "target/surefire-reports-${{ matrix.browser }}"/*.xml 2>/dev/null); do
@@ -96,15 +98,15 @@ jobs:
             COLOR="red"
           fi
   
-          echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"brightgreen\"}" > badges/${{ github.workflow }}-${{ matrix.browser }}.json
+          echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"brightgreen\"}" > ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
 
       # Commit browser custom test badge
       - name: Commit ${{ github.workflow }}-${{ matrix.browser }} badge
         uses: EndBug/add-and-commit@v9
         with:
           pull: true
-          message: "Update ${{ github.workflow }}-${{ matrix.browser }} test badge"
-          add: "badges/${{ github.workflow }}-${{ matrix.browser }}.json"
+          message: "[skip ci] Update ${{ github.workflow }}-${{ matrix.browser }} test badge"
+          add: ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
           author_name: github-actions
           author_email: github-actions@github.com
 
