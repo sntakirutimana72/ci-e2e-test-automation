@@ -64,21 +64,23 @@ jobs:
             -Pcross-browser \
             -Djacoco.destFile=target/jacoco-${{ matrix.browser }}.exec
           echo "TEST_EXIT_CODE=$?" >> $GITHUB_ENV
+          echo "${{ env.TEST_EXIT_CODE }}"
           set -e
         continue-on-error: true
 
       # Generate browser custom test badge
       - name: Generate ${{ github.workflow }}-${{ matrix.browser }} test badge
         run: |
+          ls -R "target/surefire-reports-${{ matrix.browser }}"
           mkdir -p ".github/badges"
           
           TOTAL=0
-          for val in $(xmllint --xpath "count(//testcase)" "target/surefire-reports-${{ matrix.browser }}"/*.xml 2>/dev/null); do
+          for val in $(xmllint --xpath "count(//testcase)" "target/surefire-reports-${{ matrix.browser }}/*.xml" 2>/dev/null); do
             TOTAL=$((TOTAL + val))
           done
           
           FAILS=0
-          for val in $(xmllint --xpath "count(//testcase[failure or error])" "target/surefire-reports-${{ matrix.browser }}"/*.xml 2>/dev/null); do
+          for val in $(xmllint --xpath "count(//testcase[failure or error])" "target/surefire-reports-${{ matrix.browser }}/*.xml" 2>/dev/null); do
             FAILS=$((FAILS + val))
           done
   
@@ -99,28 +101,17 @@ jobs:
           fi
   
           echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"brightgreen\"}" > ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
-          
 
-      # Set up git local user
-      - name: Setup git user
-        continue-on-error: true
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
-      # Pull out latest changes
-      - name: Pull latest changes
-        continue-on-error: true
-        run: |
-          git pull --rebase origin ${{ github.ref_name }}
-
-      # Commit browser custom test badge
-      - name: Commit ${{ github.workflow }}-${{ matrix.browser }} badge
-        uses: EndBug/add-and-commit@v9
-        continue-on-error: true
+      # Upload badges
+      - name: Upload test badges
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          message: "[skip ci] Update ${{ github.workflow }}-${{ matrix.browser }} test badge"
-          add: ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
+          name: ${{ github.workflow }}-${{ matrix.browser }}
+          path: .github/badges/${{ github.workflow }}-${{ matrix.browser }}.json
+
+      - name: List badges
+        run: ls -R ".github/badges"
 
       # Upload coverage report for each browser
       - name: Upload JaCoCo report - ${{ matrix.browser }}
@@ -368,3 +359,17 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text: "Workflow: _${{ github.workflow }}_\nBranch: _${{ github.ref }}_\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+
+  publish-badges:
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: .github/badges
+      - run: git add .github/badges/*.json
+      - run: git commit -m "[skip ci] Update all badges"
+      - run: git push
