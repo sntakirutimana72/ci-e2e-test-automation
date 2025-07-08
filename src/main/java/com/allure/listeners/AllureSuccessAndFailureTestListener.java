@@ -113,9 +113,8 @@ public class AllureSuccessAndFailureTestListener implements ITestListener {
   }
 
   private WebDriver getDriverFromTestClass(Object testClass) {
-    if (testClass instanceof ITestResult) {
+    if (testClass instanceof ITestResult)
       return (WebDriver) ((ITestResult) testClass).getAttribute("webdriver");
-    }
 
     // Fallback to reflection for ThreadLocal
     try {

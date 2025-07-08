@@ -57,6 +57,7 @@ jobs:
 
       # Run tests with browser-specific configuration
       - name: Run tests - ${{ matrix.browser }}
+        continue-on-error: true
         run: |
           set +e
           mvn clean test \
@@ -64,14 +65,11 @@ jobs:
             -Pcross-browser \
             -Djacoco.destFile=target/jacoco-${{ matrix.browser }}.exec
           echo "TEST_EXIT_CODE=$?" >> $GITHUB_ENV
-          echo "${{ env.TEST_EXIT_CODE }}"
           set -e
-        continue-on-error: true
 
       # Generate browser custom test badge
       - name: Generate ${{ github.workflow }}-${{ matrix.browser }} test badge
         run: |
-          ls -R "target/surefire-reports-${{ matrix.browser }}"
           mkdir -p ".github/badges"
           
           TOTAL=0
@@ -109,9 +107,6 @@ jobs:
         with:
           name: ${{ github.workflow }}-${{ matrix.browser }}
           path: .github/badges/${{ github.workflow }}-${{ matrix.browser }}.json
-
-      - name: List badges
-        run: ls -R ".github/badges"
 
       # Upload coverage report for each browser
       - name: Upload JaCoCo report - ${{ matrix.browser }}
@@ -318,9 +313,7 @@ jobs:
 
       # Generate a report from merged exec
       - name: Generate merged JaCoCo report
-        run: |
-          mvn compile jacoco:report
-          ls -R target
+        run: mvn compile jacoco:report
 
       # Upload merged XML to Coveralls
       - name: Upload coverage report to Coveralls
@@ -370,6 +363,17 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: .github/badges
-      - run: git add .github/badges/*.json
-      - run: git commit -m "[skip ci] Update all badges"
-      - run: git push
+
+      - name: Commit and push updated badges
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add .github/badges/*.json
+          
+          if git diff --cached --quiet; then
+            echo "No badge changes to commit."
+          else
+            git commit -m "[skip ci] Update all badges"
+            git push
+          fi
