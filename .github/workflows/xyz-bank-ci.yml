@@ -121,7 +121,6 @@ jobs:
         with:
           message: "[skip ci] Update ${{ github.workflow }}-${{ matrix.browser }} test badge"
           add: ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
-          pull: true
 
       # Upload coverage report for each browser
       - name: Upload JaCoCo report - ${{ matrix.browser }}
