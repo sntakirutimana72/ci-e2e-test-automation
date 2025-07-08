@@ -9,8 +9,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   test:
@@ -100,6 +98,9 @@ jobs:
   
           echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"brightgreen\"}" > ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
 
+      - name: Setup Git remote with token
+        run: git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
       # Commit browser custom test badge
       - name: Commit ${{ github.workflow }}-${{ matrix.browser }} badge
         uses: EndBug/add-and-commit@v9
@@ -123,7 +124,7 @@ jobs:
         with:
           name: allure-results-${{ matrix.browser }}
           path: target/allure-results/
-          retention-days: 30
+          retention-days: 7
 
       # Upload screenshots on failure
       - name: Upload screenshots - ${{ matrix.browser }}

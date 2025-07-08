@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>brightgreen</w>
       <w>coverallsapp</w>
       <w>dbrowser</w>
       <w>ddata</w>
@@ -15,6 +16,7 @@
       <w>mrkdwn</w>
       <w>openqa</w>
       <w>operablink</w>
+      <w>pcross</w>
       <w>peaceiris</w>
       <w>privatebrowsing</w>
       <w>slackapi</w>
@@ -22,6 +24,7 @@
       <w>temurin</w>
       <w>testdata</w>
       <w>withdrawl</w>
+      <w>xmllint</w>
     </words>
   </dictionary>
 </component>
