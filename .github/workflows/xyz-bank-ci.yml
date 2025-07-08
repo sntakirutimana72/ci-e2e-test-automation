@@ -73,23 +73,29 @@ jobs:
           mkdir -p ".github/badges"
           
           TOTAL=0
-          for val in $(xmllint --xpath "count(//testcase)" "target/surefire-reports-${{ matrix.browser }}/*.xml" 2>/dev/null); do
-            TOTAL=$((TOTAL + val))
-          done
-          
           FAILS=0
-          for val in $(xmllint --xpath "count(//testcase[failure or error])" "target/surefire-reports-${{ matrix.browser }}/*.xml" 2>/dev/null); do
-            FAILS=$((FAILS + val))
-          done
-  
-          PASSED=$((TOTAL - FAILS))
           
+          for file in target/surefire-reports-${{ matrix.browser }}/*.xml; do
+            if [ -f "$file" ]; then
+              t=$(xmllint --xpath "count(//testcase)" "$file" 2>/dev/null)
+              t=${t%.*}
+              TOTAL=$((TOTAL + t))
+              
+              f=$(xmllint --xpath "count(//testcase[failure or error])" "$file" 2>/dev/null)
+              f=${f%.*}
+              FAILS=$((FAILS + f))
+            fi
+          done
+
+          PASSED=$((TOTAL - FAILS))
+          echo "TOTAL: $TOTAL, FAILS: $FAILS, PASSED: $PASSED"
+
           if [ "$TOTAL" -gt 0 ]; then
             PERCENT=$((100 * PASSED / TOTAL))
           else
             PERCENT=0
           fi
-          
+
           if [ "$PERCENT" -ge 90 ]; then
             COLOR="brightgreen"
           elif [ "$PERCENT" -ge 70 ]; then
@@ -97,8 +103,8 @@ jobs:
           else
             COLOR="red"
           fi
-  
-          echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"brightgreen\"}" > ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
+
+          echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"${{ COLOR }}\"}" > ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
 
       # Upload badges
       - name: Upload test badges
@@ -107,6 +113,9 @@ jobs:
         with:
           name: ${{ github.workflow }}-${{ matrix.browser }}
           path: .github/badges/${{ github.workflow }}-${{ matrix.browser }}.json
+
+      - name: List badges
+        run: ls -R ".github/badges"
 
       # Upload coverage report for each browser
       - name: Upload JaCoCo report - ${{ matrix.browser }}
@@ -137,15 +146,21 @@ jobs:
       # Set status icons for Slack notification
       - name: Set success icon
         if: ${{ env.TEST_EXIT_CODE }} == '0'
-        run: 'echo "SLACK_STATUS_ICON=:white_check_mark: PASSED" >> $GITHUB_ENV'
+        run: |
+          'echo "SLACK_STATUS_ICON=:white_check_mark: PASSED" >> $GITHUB_ENV'
+          echo "JOB_STATUS=Success" >> $GITHUB_ENV
 
       - name: Set failure icon
         if: ${{ env.TEST_EXIT_CODE }} != '0'
-        run: 'echo "SLACK_STATUS_ICON=:x: FAILED" >> $GITHUB_ENV'
+        run: |
+          'echo "SLACK_STATUS_ICON=:x: FAILED" >> $GITHUB_ENV'
+          echo "JOB_STATUS=Failure" >> $GITHUB_ENV
 
       - name: Set cancellation icon
         if: cancelled()
-        run: 'echo "SLACK_STATUS_ICON=:warning: CANCELLED" >> $GITHUB_ENV'
+        run: |
+          'echo "SLACK_STATUS_ICON=:warning: CANCELLED" >> $GITHUB_ENV'
+          echo "JOB_STATUS=Cancelled" >> $GITHUB_ENV
 
       # Send Slack notification on job completion
       - name: Slack Notification - Job Finished
@@ -163,7 +178,7 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "Browser: _${{ matrix.browser }}_\n Workflow: _${{ github.workflow }}_\n Status: `${{ job.status }}`"
+                  text: "Browser: _${{ matrix.browser }}_\n Workflow: _${{ github.workflow }}_\n Status: `${{ env.JOB_STATUS }}`"
               - type: "section"
                 text:
                   type: "mrkdwn"
@@ -277,9 +292,10 @@ jobs:
                   text: "Workflow: _${{ github.workflow }}_\n Branch: _${{ github.ref }}_\n:globe_with_meridians: <https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}|View Allure Report>\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
 
   generate-coverage-report:
-    runs-on: ubuntu-latest
     needs: test
+    runs-on: ubuntu-latest
     if: always()
+    continue-on-error: true
 
     steps:
       - name: Checkout repository
