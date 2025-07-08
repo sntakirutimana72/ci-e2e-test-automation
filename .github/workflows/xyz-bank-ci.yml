@@ -104,11 +104,9 @@ jobs:
       - name: Commit ${{ github.workflow }}-${{ matrix.browser }} badge
         uses: EndBug/add-and-commit@v9
         with:
-          pull: true
           message: "[skip ci] Update ${{ github.workflow }}-${{ matrix.browser }} test badge"
           add: ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
-          author_name: github-actions
-          author_email: github-actions@github.com
+          pull: true
 
       # Upload coverage report for each browser
       - name: Upload JaCoCo report - ${{ matrix.browser }}
@@ -315,7 +313,10 @@ jobs:
 
       # Generate a report from merged exec
       - name: Generate merged JaCoCo report
-        run: mvn jacoco:report
+        run: |
+          ls -R target
+          ls -R target/jacoco-files
+          mvn jacoco:report
 
       # Upload merged XML to Coveralls
       - name: Upload coverage report to Coveralls
