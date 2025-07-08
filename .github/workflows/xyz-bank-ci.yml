@@ -59,7 +59,7 @@ jobs:
           set +e
           mvn clean test \
             -Dbrowser=${{ matrix.browser }} \
-            -Pcross-browser
+            -Pcross-browser \
             -Djacoco.destFile=target/jacoco-${{ matrix.browser }}.exec
           echo "TEST_EXIT_CODE=$?" >> $GITHUB_ENV
           set -e
@@ -102,8 +102,11 @@ jobs:
       - name: Commit ${{ github.workflow }}-${{ matrix.browser }} badge
         uses: EndBug/add-and-commit@v9
         with:
+          pull: true
           message: "Update ${{ github.workflow }}-${{ matrix.browser }} test badge"
           add: "badges/${{ github.workflow }}-${{ matrix.browser }}.json"
+          author_name: github-actions
+          author_email: github-actions@github.com
 
       # Upload coverage report for each browser
       - name: Upload JaCoCo report - ${{ matrix.browser }}
@@ -164,11 +167,7 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "Branch: _${{ github.ref }}_\nCommit: `${{ github.sha }}`\nAuthor: _${{ github.actor }}_"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: ":link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                  text: "Branch: _${{ github.ref }}_\nCommit: `${{ github.sha }}`\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
 
   # Generate combined Allure report
   generate-allure-report:
