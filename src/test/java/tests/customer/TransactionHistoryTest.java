@@ -16,7 +16,7 @@ public class TransactionHistoryTest extends CustomerBaseTestWithPreconditions {
   @Preconditions({"Bank app should be accessible on web"})
   @Severity(SeverityLevel.BLOCKER)
   @Description("Verify if customers can view their own transaction history")
-  public void verify(String url, String username) {
+  public void verifyCustomerCanViewTransactionHistory(String url, String username) {
     Assert.assertTrue(
       loginPrecondition(url, username)
         .clickTransactions()
