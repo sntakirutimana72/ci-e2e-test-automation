@@ -67,9 +67,6 @@ jobs:
           echo "TEST_EXIT_CODE=$?" >> $GITHUB_ENV
           set -e
 
-      - name: Install xmllint
-        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
-
       # Generate browser custom test badge
       - name: Generate ${{ github.workflow }}-${{ matrix.browser }} test badge
         run: |
@@ -94,7 +91,6 @@ jobs:
           done
 
           PASSED=$((TOTAL - FAILS))
-          echo "TOTAL: $TOTAL, FAILS: $FAILS, PASSED: $PASSED"
 
           if [ "$TOTAL" -gt 0 ]; then
             PERCENT=$((100 * PASSED / TOTAL))
@@ -118,10 +114,7 @@ jobs:
         if: always()
         with:
           name: ${{ github.workflow }}-${{ matrix.browser }}
-          path: .github/badges/${{ github.workflow }}-${{ matrix.browser }}.json
-
-      - name: List badges
-        run: ls -R ".github/badges"
+          path: badges/${{ github.workflow }}-${{ matrix.browser }}.json
 
       # Upload coverage report for each browser
       - name: Upload JaCoCo report - ${{ matrix.browser }}
@@ -382,16 +375,42 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+
+      # Download badges
+      - name: Download Chrome badge
+        uses: actions/download-artifact@v4
+        if: always()
         with:
+          name: ${{ github.workflow }}-chrome
           path: .github/badges
+
+      - name: Download Firefox badge
+        uses: actions/download-artifact@v4
+        if: always()
+        with:
+          name: ${{ github.workflow }}-firefox
+          path: .github/badges
+
+      - name: Download Edge badge
+        uses: actions/download-artifact@v4
+        if: always()
+        with:
+          name: ${{ github.workflow }}-edge
+          path: .github/badges
+
+      - name: List downloaded badges
+        run: ls -R ".github/badges"
 
       - name: Commit and push updated badges
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
+          git status
           git add .github/badges/*.json
+          git status
+          git diff
+          git diff --cached
           
           if git diff --cached --quiet; then
             echo "No badge changes to commit."
