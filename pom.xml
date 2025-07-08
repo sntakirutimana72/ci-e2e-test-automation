@@ -9,7 +9,6 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <jacoco.agent.argLine/>
   </properties>
 
   <dependencies>
@@ -105,10 +104,13 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.5.3</version>
         <configuration>
-          <argLine>${jacoco.agent.argLine}</argLine>
           <suiteXmlFiles>
             <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
           </suiteXmlFiles>
+          <printSummary>true</printSummary>
+          <reportFormat>plain</reportFormat>
+          <useFile>false</useFile>
+          <trimStackTrace>false</trimStackTrace>
         </configuration>
       </plugin>
 
@@ -132,6 +134,7 @@
             </fileSet>
           </fileSets>
           <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
+          <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
         </configuration>
         <executions>
           <execution>
@@ -162,4 +165,25 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>cross-browser</id>
+      <activation>
+        <property>
+          <name>browser</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <reportsDirectory>${project.build.directory}/surefire-reports-${browser}</reportsDirectory>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
