@@ -22,6 +22,8 @@ jobs:
       # Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       # Setup Java
       - name: Set up JDK 17
@@ -97,13 +99,25 @@ jobs:
           fi
   
           echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"brightgreen\"}" > ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
+          
 
-      - name: Setup Git remote with token
-        run: git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+      # Set up git local user
+      - name: Setup git user
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      # Pull out latest changes
+      - name: Pull latest changes
+        continue-on-error: true
+        run: |
+          git pull --rebase origin ${{ github.ref_name }}
 
       # Commit browser custom test badge
       - name: Commit ${{ github.workflow }}-${{ matrix.browser }} badge
         uses: EndBug/add-and-commit@v9
+        continue-on-error: true
         with:
           message: "[skip ci] Update ${{ github.workflow }}-${{ matrix.browser }} test badge"
           add: ".github/badges/${{ github.workflow }}-${{ matrix.browser }}.json"
@@ -315,9 +329,8 @@ jobs:
       # Generate a report from merged exec
       - name: Generate merged JaCoCo report
         run: |
+          mvn compile jacoco:report
           ls -R target
-          ls -R target/jacoco-files
-          mvn jacoco:report
 
       # Upload merged XML to Coveralls
       - name: Upload coverage report to Coveralls
