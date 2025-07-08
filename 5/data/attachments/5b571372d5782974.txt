@@ -1,1 +1,0 @@
-https://www.globalsqa.com/angularJs-protractor/BankingProject/#/account
