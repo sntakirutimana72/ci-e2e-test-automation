@@ -1,0 +1,24 @@
+posts:
+  create:
+    - payload:
+        title: valid post tile
+        body: valid post body
+        userId: 11
+      expectedStatus: 201
+  update:
+    - payload:
+        title: updated post title
+        body: updated post body
+        userId: 12
+      id: 8
+      expectedStatus: 200
+  retrieve:
+    nonExisting:
+      - id: 101
+        expectedStatus: 404
+    existing:
+      - id: 1
+        expectedStatus: 200
+  delete:
+    - id: 100
+      expectedStatus: 200

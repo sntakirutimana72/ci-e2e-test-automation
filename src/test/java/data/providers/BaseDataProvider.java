@@ -1,7 +1,7 @@
-package data;
+package data.providers;
 
-import com.pojo.RootDataPojo;
-import com.util.YamlDataLoader;
+import data.pojo.RootDataPojo;
+import util.YamlDataLoader;
 
 import java.util.Objects;
 

@@ -1,9 +1,8 @@
-package com.util;
-
-import com.pojo.RootDataPojo;
+package util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import data.pojo.RootDataPojo;
 
 import java.io.InputStream;
 

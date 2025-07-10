@@ -1,4 +1,4 @@
-package com.allure.annotations;
+package allure.annotations;
 
 import io.qameta.allure.LabelAnnotation;
 
@@ -8,5 +8,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface Scenario {
-  String value() default "";
+  String value();
 }

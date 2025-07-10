@@ -18,19 +18,19 @@ It integrates with TestNG for structured test execution and reporting.
 
 ## Overview:
 
-1. Define a comprehensive `Test Plan` for API testing activities
+1. Define a comprehensive `Test Plan` for API testing activities.
 
 2. **Setup and configuration**
-   - Maven -- `pom.xml`
+   - Maven - `pom.xml`
    - Add `REST Assured`, `TestNG`, `Hamcrest`, and `Allure` dependencies in `pom.xml`
-   - Add also logging dependencies `logback`, `slf4j`, `Hamcrest` in `pom.xml`
+   - Add also logging dependencies `logback`, `slf4j` in `pom.xml`
 
-3. **Implement Endpoint Object Model (EOM)**
+3. **Implement Endpoint Object Model (`EOM`)**
    - Create `REST-Assured` based specification classes for each identified `endpoint`.
    - Create separate `endpoint` classes for each identified `endpoint`.
    
 4. **Design API Test Cases**
-   - Define `data-provider` classes for each identified `endpoint`.
+   - Define `data provider` classes for each identified `endpoint`.
    - Write test case scripts for each `EOM` class.
    
 5. **Implement a CI pipeline using GitHub Actions**
