@@ -2,9 +2,9 @@ package tests.bank_manager;
 
 import com.allure.annotations.Preconditions;
 import com.allure.annotations.Scenario;
-import com.page.dashboard.AddCustomerPage;
-import com.page.dashboard.CustomersListPage;
-import com.page.dashboard.OpenAccountPage;
+import com.specs.dashboard.AddCustomerPage;
+import com.specs.dashboard.CustomersListPage;
+import com.specs.dashboard.OpenAccountPage;
 import data.AccountDataProvider;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;

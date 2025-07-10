@@ -1,8 +1,8 @@
 package tests.customer;
 
 import com.allure.annotations.Preconditions;
-import com.page.dashboard.CustomerDashboardPage;
-import com.page.login.CustomerLoginPage;
+import com.specs.dashboard.CustomerDashboardPage;
+import com.specs.login.CustomerLoginPage;
 import io.qameta.allure.Story;
 import org.testng.Assert;
 import tests.BaseTest;

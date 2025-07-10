@@ -2,7 +2,7 @@ package tests.customer;
 
 import com.allure.annotations.Preconditions;
 import com.allure.annotations.Scenario;
-import com.page.dashboard.DepositPage;
+import com.specs.dashboard.DepositPage;
 import data.DepositDataProvider;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;

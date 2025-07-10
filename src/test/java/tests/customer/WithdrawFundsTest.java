@@ -2,7 +2,7 @@ package tests.customer;
 
 import com.allure.annotations.Preconditions;
 import com.allure.annotations.Scenario;
-import com.page.dashboard.WithdrawalPage;
+import com.specs.dashboard.WithdrawalPage;
 import data.WithdrawDataProvider;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;

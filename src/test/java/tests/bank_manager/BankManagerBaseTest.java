@@ -1,7 +1,6 @@
 package tests.bank_manager;
 
-import com.page.Base;
-import com.page.dashboard.BankManagerDashboardPage;
+import com.specs.dashboard.BankManagerDashboardPage;
 import io.qameta.allure.Story;
 import org.openqa.selenium.Alert;
 import org.testng.Assert;

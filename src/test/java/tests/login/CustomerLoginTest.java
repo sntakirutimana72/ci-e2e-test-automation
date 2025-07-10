@@ -4,7 +4,7 @@ import data.LoginDataProvider;
 import tests.BaseTest;
 import com.allure.annotations.Preconditions;
 import com.allure.annotations.Scenario;
-import com.page.login.CustomerLoginPage;
+import com.specs.login.CustomerLoginPage;
 import io.qameta.allure.*;
 import org.testng.annotations.*;
 import org.testng.Assert;

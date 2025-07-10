@@ -1,7 +1,5 @@
 package tests;
 
-import com.util.DriverFactory;
-
 import com.util.SystemLogger;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;

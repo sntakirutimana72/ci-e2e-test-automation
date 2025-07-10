@@ -13,6 +13,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>5.4.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.qameta.allure</groupId>
       <artifactId>allure-testng</artifactId>
       <version>2.27.0</version>
@@ -25,21 +31,10 @@
     </dependency>
 
     <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-java</artifactId>
-      <version>4.33.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-devtools-v136</artifactId>
-      <version>4.33.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.github.bonigarcia</groupId>
-      <artifactId>webdrivermanager</artifactId>
-      <version>5.8.0</version>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>3.0</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -51,12 +46,6 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>1.5.18</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.dataformat</groupId>
-      <artifactId>jackson-dataformat-yaml</artifactId>
-      <version>2.18.2</version>
     </dependency>
   </dependencies>
   <build>
@@ -124,27 +113,12 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.12</version>
-        <configuration>
-          <fileSets>
-            <fileSet>
-              <directory>${project.build.directory}/jacoco-files</directory>
-              <includes>
-                <include>jacoco-*.exec</include>
-              </includes>
-            </fileSet>
-          </fileSets>
-          <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
-          <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
-        </configuration>
         <executions>
           <execution>
             <id>prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
-            <configuration>
-              <destFile>${jacoco.destFile}</destFile>
-            </configuration>
             <phase>initialize</phase>
           </execution>
           <execution>
@@ -154,36 +128,8 @@
               <goal>report</goal>
             </goals>
           </execution>
-          <execution>
-            <id>merge</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>merge</goal>
-            </goals>
-          </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>cross-browser</id>
-      <activation>
-        <property>
-          <name>browser</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <reportsDirectory>${project.build.directory}/surefire-reports-${browser}</reportsDirectory>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>

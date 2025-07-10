@@ -2,7 +2,7 @@ package tests.bank_manager;
 
 import com.allure.annotations.Preconditions;
 import com.allure.annotations.Scenario;
-import com.page.dashboard.AddCustomerPage;
+import com.specs.dashboard.AddCustomerPage;
 import data.NewCustomerDataProvider;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
