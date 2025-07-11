@@ -1,38 +1,26 @@
 name: xyz-bank-ci
-run-name: Cross-Browser Testing with Allure
-
 on:
   push:
-    branches: [ xyz-bank-app ]
+    branches: [ api-testing-with-rest-assured ]
     paths-ignore:
       - '.github/badges/**'
-
 permissions:
   contents: write
-
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        browser: [chrome, firefox, edge]
-      fail-fast: false
-
     steps:
-      # Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           persist-credentials: true
 
-      # Setup Java
-      - name: Set up JDK 17
+      - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Cache Maven dependencies
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
@@ -40,45 +28,25 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      # Browser-specific setup (since you mentioned auto-setup dependency, these are lightweight)
-      - name: Setup Chrome
-        if: matrix.browser == 'chrome'
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
-
-      - name: Setup Firefox
-        if: matrix.browser == 'firefox'
-        uses: browser-actions/setup-firefox@v1
-
-      - name: Setup Edge
-        if: matrix.browser == 'edge'
-        uses: browser-actions/setup-edge@v1
-
-      # Run tests with browser-specific configuration
-      - name: Run tests - ${{ matrix.browser }}
+      - name: Run tests
         continue-on-error: true
         run: |
           set +e
-          mvn clean test \
-            -Dbrowser=${{ matrix.browser }} \
-            -Pcross-browser \
-            -Djacoco.destFile=target/jacoco-${{ matrix.browser }}.exec
+          mvn clean test
           echo "TEST_EXIT_CODE=$?" >> $GITHUB_ENV
           set -e
 
-      - name: Install xmllist
+      - name: Install xmllist for parsing allure-reports to create custom badges
         run: sudo apt-get update && sudo apt-get install -y libxml2-utils
 
-      # Generate browser custom test badge
-      - name: Generate ${{ github.workflow }}-${{ matrix.browser }} test badge
+      - name: Generate custom test badge
         run: |
           mkdir -p "badges"
           
           TOTAL=0
           FAILS=0
           
-          for file in target/surefire-reports-${{ matrix.browser }}/*.xml; do
+          for file in target/surefire-reports/*.xml; do
             if [ -f "$file" ]; then
               t=$(xmllint --xpath "count(//testcase)" "$file" 2>/dev/null)
               t=${t%.*}
@@ -106,43 +74,37 @@ jobs:
             COLOR="red"
           fi
 
-          echo "{\"schemaVersion\":1,\"label\":\"${{ matrix.browser }}\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"$COLOR\"}" > "badges/${{ github.workflow }}-${{ matrix.browser }}.json"
+          echo "{\"schemaVersion\":1,\"label\":\"Post API Tests\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"$COLOR\"}" > "badges/api-testing-ci.json"
 
-      # Upload badges
-      - name: Upload ${{ github.workflow }}-${{ matrix.browser }} test badge
+      - name: Publish custom badge
+        if: always()
+        run: |
+          git add .github/badges/*.json
+          
+          if git diff --cached --quiet; then
+            echo "No badge changes to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -m "[skip ci] Update all badges"
+            git push
+          fi
+
+      - name: Upload jacoco report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ github.workflow }}-${{ matrix.browser }}
-          path: badges/${{ github.workflow }}-${{ matrix.browser }}.json
+          name: jacoco
+          path: target/
 
-      # Upload coverage report for each browser
-      - name: Upload JaCoCo report - ${{ matrix.browser }}
+      - name: Upload Allure results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: jacoco-${{ matrix.browser }}
-          path: target/jacoco-${{ matrix.browser }}.exec
-
-      # Upload browser-specific results
-      - name: Upload Allure results - ${{ matrix.browser }}
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-results-${{ matrix.browser }}
+          name: allure-results
           path: target/allure-results/
           retention-days: 7
 
-      # Upload screenshots on failure
-      - name: Upload screenshots - ${{ matrix.browser }}
-        uses: actions/upload-artifact@v4
-        if: ${{ env.TEST_EXIT_CODE }} != '0'
-        with:
-          name: screenshots-${{ matrix.browser }}
-          path: screenshots/
-          retention-days: 7
-
-      # Set status icons for Slack notification
       - name: Set success icon
         if: ${{ env.TEST_EXIT_CODE }} == '0'
         run: |
@@ -161,7 +123,6 @@ jobs:
           echo "SLACK_STATUS_ICON=':warning: CANCELLED'" >> $GITHUB_ENV
           echo "JOB_STATUS=Cancelled" >> $GITHUB_ENV
 
-      # Send Slack notification on job completion
       - name: Slack Notification - Job Finished
         if: always()
         uses: slackapi/slack-github-action@v2.1.0
@@ -183,7 +144,6 @@ jobs:
                   type: "mrkdwn"
                   text: "Branch: _${{ github.ref }}_\nCommit: `${{ github.sha }}`\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
 
-  # Generate combined Allure report
   generate-allure-report:
     runs-on: ubuntu-latest
     needs: test
@@ -193,46 +153,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Download all browser results
-      - name: Download Chrome results
+      - name: Download results
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
-          name: allure-results-chrome
-          path: allure-results/chrome/
+          name: allure-results
+          path: allure-results/
 
-      - name: Download Firefox results
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: allure-results-firefox
-          path: allure-results/firefox/
-
-      - name: Download Edge results
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: allure-results-edge
-          path: allure-results/edge/
-
-      # Combine results from all browsers
-      - name: Combine Allure results
-        run: |
-          mkdir -p combined-results
-          # Copy results from each browser, handling cases where some may not exist
-          for browser in chrome firefox edge; do
-            if [ -d "allure-results/$browser" ]; then
-              echo "Copying results from $browser..."
-              cp -r allure-results/$browser/* combined-results/ 2>/dev/null || true
-            else
-              echo "No results found for $browser"
-            fi
-          done
-          # List combined results for verification
-          echo "Combined results:"
-          ls -la combined-results/ || echo "No combined results found"
-
-      # Get Allure history for trending
       - name: Get Allure history
         uses: actions/checkout@v4
         continue-on-error: true
@@ -240,16 +167,14 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      # Generate combined Allure report
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          allure_results: combined-results
+          allure_results: allure-results
           allure_history: allure-history
           keep_reports: 20
 
-      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v4
@@ -259,7 +184,6 @@ jobs:
           publish_dir: allure-history
           force_orphan: true
 
-      # Set report generation status
       - name: Set report success icon
         if: success()
         run: 'echo "REPORT_STATUS_ICON=:white_check_mark: REPORT GENERATED" >> $GITHUB_ENV'
@@ -272,7 +196,6 @@ jobs:
         if: cancelled()
         run: 'echo "REPORT_STATUS_ICON=:warning: REPORT CANCELLED" >> $GITHUB_ENV'
 
-      # Send final Slack notification with report status
       - name: Slack Notification - Report Generation Finished
         if: always()
         uses: slackapi/slack-github-action@v2.1.0
@@ -300,44 +223,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Download all jacoco exec files
-      - name: Download Chrome exec
+      - name: Download exec
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
-          name: jacoco-chrome
-          path: target/jacoco-files
+          name: jacoco
+          path: target/
 
-      - name: Download Firefox exec
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: jacoco-firefox
-          path: target/jacoco-files
-
-      - name: Download Edge exec
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: jacoco-edge
-          path: target/jacoco-files
-
-      # Merge exec files
-      - name: Merge JaCoCo exec files
-        run: mvn jacoco:merge
-
-      # Generate a report from merged exec
-      - name: Generate merged JaCoCo report
+      - name: Generate JaCoCo report
         run: mvn compile jacoco:report
 
-      # Upload merged XML to Coveralls
       - name: Upload coverage report to Coveralls
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: target/site/jacoco/jacoco.xml
 
-      # Set report generation status
       - name: Set report success icon
         if: success()
         run: 'echo "COVERALLS_STATUS_ICON=:white_check_mark: REPORT GENERATED" >> $GITHUB_ENV'
@@ -350,7 +251,6 @@ jobs:
         if: cancelled()
         run: 'echo "COVERALLS_STATUS_ICON=:warning: REPORT CANCELLED" >> $GITHUB_ENV'
 
-      # Send final Slack notification with coverage report status
       - name: Slack Notification - Report Generation Finished
         if: always()
         uses: slackapi/slack-github-action@v2.1.0
@@ -367,46 +267,3 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text: "Workflow: _${{ github.workflow }}_\nBranch: _${{ github.ref }}_\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
-
-  publish-badges:
-    needs: test
-    runs-on: ubuntu-latest
-    if: always()
-
-    steps:
-      - uses: actions/checkout@v4
-
-      # Download badges
-      - name: Download Chrome badge
-        uses: actions/download-artifact@v4
-        if: always()
-        with:
-          name: ${{ github.workflow }}-chrome
-          path: .github/badges
-
-      - name: Download Firefox badge
-        uses: actions/download-artifact@v4
-        if: always()
-        with:
-          name: ${{ github.workflow }}-firefox
-          path: .github/badges
-
-      - name: Download Edge badge
-        uses: actions/download-artifact@v4
-        if: always()
-        with:
-          name: ${{ github.workflow }}-edge
-          path: .github/badges
-
-      - name: Commit and push updated badges
-        run: |
-          git add .github/badges/*.json
-          
-          if git diff --cached --quiet; then
-            echo "No badge changes to commit."
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git commit -m "[skip ci] Update all badges"
-            git push
-          fi
