@@ -13,9 +13,11 @@ posts:
     - payload:
         title: post title
         userId: 11
+      expectedStatus: 422
     - payload:
         title: post title
         body: post body
+      expectedStatus: 422
   update:
     - payload:
         title: updated post title
@@ -35,7 +37,7 @@ posts:
       - id: 101
         expectedStatus: 404
     existing:
-      - id: 1
+      - id: 9
         expectedStatus: 200
   delete:
     - id: 50

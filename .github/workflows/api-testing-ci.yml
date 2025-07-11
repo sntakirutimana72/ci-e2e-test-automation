@@ -1,4 +1,4 @@
-name: xyz-bank-ci
+name: api-testing-ci
 on:
   push:
     branches: [ api-testing-with-rest-assured ]
@@ -41,7 +41,7 @@ jobs:
 
       - name: Generate custom test badge
         run: |
-          mkdir -p "badges"
+          mkdir -p ".github/badges"
           
           TOTAL=0
           FAILS=0
@@ -74,7 +74,7 @@ jobs:
             COLOR="red"
           fi
 
-          echo "{\"schemaVersion\":1,\"label\":\"Post API Tests\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"$COLOR\"}" > "badges/api-testing-ci.json"
+          echo "{\"schemaVersion\":1,\"label\":\"Post API Tests\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"$COLOR\"}" > ".github/badges/api-testing-ci.json"
 
       - name: Publish custom badge
         if: always()
@@ -108,19 +108,19 @@ jobs:
       - name: Set success icon
         if: ${{ env.TEST_EXIT_CODE }} == '0'
         run: |
-          echo "SLACK_STATUS_ICON=':white_check_mark: PASSED'" >> $GITHUB_ENV
+          echo 'SLACK_STATUS_ICON=:white_check_mark: PASSED' >> $GITHUB_ENV
           echo "JOB_STATUS=Success" >> $GITHUB_ENV
 
       - name: Set failure icon
         if: ${{ env.TEST_EXIT_CODE }} != '0'
         run: |
-          echo "SLACK_STATUS_ICON=':x: FAILED'" >> $GITHUB_ENV
+          echo 'SLACK_STATUS_ICON=:x: FAILED' >> $GITHUB_ENV
           echo "JOB_STATUS=Failure" >> $GITHUB_ENV
 
       - name: Set cancellation icon
         if: cancelled()
         run: |
-          echo "SLACK_STATUS_ICON=':warning: CANCELLED'" >> $GITHUB_ENV
+          echo 'SLACK_STATUS_ICON=:warning: CANCELLED' >> $GITHUB_ENV
           echo "JOB_STATUS=Cancelled" >> $GITHUB_ENV
 
       - name: Slack Notification - Job Finished
@@ -134,15 +134,11 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "*${{ matrix.browser }} Test Results:* ${{ env.SLACK_STATUS_ICON }}"
+                  text: "*API Test Results:* ${{ env.SLACK_STATUS_ICON }}"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "Browser: _${{ matrix.browser }}_\n Workflow: _${{ github.workflow }}_\n Status: `${{ env.JOB_STATUS }}`"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "Branch: _${{ github.ref }}_\nCommit: `${{ github.sha }}`\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                  text: "Workflow: _${{ github.workflow }}_\n Status: `${{ env.JOB_STATUS }}`\nBranch: _${{ github.ref }}_\nCommit: `${{ github.sha }}`\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
 
   generate-allure-report:
     runs-on: ubuntu-latest
@@ -173,7 +169,7 @@ jobs:
         with:
           allure_results: allure-results
           allure_history: allure-history
-          keep_reports: 20
+          keep_reports: 1
 
       - name: Deploy to GitHub Pages
         if: always()

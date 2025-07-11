@@ -1,6 +1,6 @@
 ![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sntakirutimana72/ci-e2e-test-automation/refs/heads/api-testing-with-rest-assured/.github/badges/api-testing-ci.json)
 [![Test Coverage](https://coveralls.io/repos/github/sntakirutimana72/ci-e2e-test-automation/badge.svg?branch=api-testing-with-rest-assured)](https://coveralls.io/github/sntakirutimana72/ci-e2e-test-automation?branch=api-testing-with-rest-assured)
-[![API Test Plan](https://img.shields.io/badge/API%20Test%20Plan-navy)](https://docs.google.com/document/d/1CzGmriueqS-OF-v4HELObDs04K31jUwAr8Ztcf3njcY/edit?tab=t.0)
+[![API Test Plan](https://img.shields.io/badge/API%20Test%20Plan-blue)](https://docs.google.com/document/d/1CzGmriueqS-OF-v4HELObDs04K31jUwAr8Ztcf3njcY/edit?tab=t.0)
 
 # API Testing with REST Assured
 
