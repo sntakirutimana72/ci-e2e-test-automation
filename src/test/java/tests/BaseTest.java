@@ -9,7 +9,7 @@ public abstract class BaseTest {
   protected Logger logger;
 
   @BeforeClass
-  public void setup() {
+  public void enableLogging() {
     logger = SystemLogger.getLogger(getClass());
   }
 }

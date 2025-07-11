@@ -32,9 +32,23 @@ public class PostDataProvider extends BaseDataProvider {
       .toArray(Object[][]::new);
   }
 
+  @DataProvider(name = "updatePost404")
+  public static Object[][] updatePost404() {
+    return load().posts().update404().stream()
+      .map(tc -> new Object[]{ tc.id(), tc.payload(), tc.expectedStatus() })
+      .toArray(Object[][]::new);
+  }
+
   @DataProvider(name = "createPost")
   public static Object[][] createPost() {
     return load().posts().create().stream()
+      .map(tc -> new Object[]{ tc.payload(), tc.expectedStatus() })
+      .toArray(Object[][]::new);
+  }
+
+  @DataProvider(name = "createPost422")
+  public static Object[][] createPost422() {
+    return load().posts().create422().stream()
       .map(tc -> new Object[]{ tc.payload(), tc.expectedStatus() })
       .toArray(Object[][]::new);
   }

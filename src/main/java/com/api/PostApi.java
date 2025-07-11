@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import static io.restassured.RestAssured.given;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PostAPI {
+public class PostApi {
 
   public static Response getPosts(int status) {
     return given()
@@ -71,15 +71,13 @@ public class PostAPI {
       .response();
   }
 
-  public static Response deletePost(int id, int status) {
-    return given()
+  public static void deletePost(int id, int status) {
+    given()
       .spec(PostSpec.requestSpec())
       .pathParam("id", id)
       .when()
       .delete("/{id}")
       .then()
-      .spec(ResponseSpec.defaultSpec(status))
-      .extract()
-      .response();
+      .spec(ResponseSpec.defaultSpec(status));
   }
 }

@@ -4,8 +4,9 @@
     <listener class-name="allure.listeners.AllureSuccessAndFailureTestListener"/>
   </listeners>
 
-  <test name="">
+  <test name="Post API Tests">
     <classes>
+      <class name="tests.PostApiTests"/>
     </classes>
   </test>
 </suite>
