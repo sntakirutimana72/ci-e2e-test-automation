@@ -1,5 +1,7 @@
 target/
 tmp/
+config/
+!config/browsers.json
 allure-results/
 .allure/
 screenshots/

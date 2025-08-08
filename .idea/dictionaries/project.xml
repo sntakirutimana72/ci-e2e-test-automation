@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>aerokube</w>
       <w>brightgreen</w>
       <w>coverallsapp</w>
       <w>dbrowser</w>
@@ -9,8 +10,11 @@
       <w>dest</w>
       <w>dexec</w>
       <w>dheadless</w>
+      <w>dind</w>
       <w>djacoco</w>
+      <w>dockerd</w>
       <w>doutput</w>
+      <w>envs</w>
       <w>hermoine</w>
       <w>lete</w>
       <w>mrkdwn</w>

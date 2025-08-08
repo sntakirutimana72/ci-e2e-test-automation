@@ -1,0 +1,84 @@
+login:
+  failure:
+    - desc: No username or password provided
+      request:
+        username: ""
+        password: ""
+      expected:
+        message: Username is required
+    - desc: No password provided
+      request:
+        username: ${STANDARD_USER}
+        password: ""
+      expected:
+        message: Password is required
+    - desc: No username provided
+      request:
+        username: ""
+        password: ${ANY_USER_PASS}
+      expected:
+        message: Username is required
+    - desc: Invalid username
+      request:
+        username: invalid_user
+        password: ${ANY_USER_PASS}
+      expected:
+        message: Username and password do not match any user in this service
+    - desc: Invalid password
+      request:
+        username: ${STANDARD_USER}
+        password: invalid_pass
+      expected:
+        message: Username and password do not match any user in this service
+    - desc: Blocked user
+      request:
+        username: ${LOCKED_OUT_USER}
+        password: ${ANY_USER_PASS}
+      expected:
+        message: Sorry, this user has been locked out.
+  success:
+    - desc: as standard user
+      request:
+        username: ${STANDARD_USER}
+        password: ${ANY_USER_PASS}
+      expected:
+
+checkout:
+  billingInfo:
+    valid:
+      - desc: Valid billing info
+        request:
+          firstname: "Anonymous"
+          lastname: "Anonymous"
+          postalCode: "0000"
+        expected:
+          message:
+    invalid:
+      - desc: no billing info provided
+        request:
+          firstname: ""
+          lastname: ""
+          postalCode: ""
+        expected:
+          message: First Name is required
+      - desc: no firstname provided
+        request:
+          firstname: ""
+          lastname: "Anonymous"
+          postalCode: "0000"
+        expected:
+          message: First Name is required
+      - desc: no lastname provided
+        request:
+          firstname: "Anonymous"
+          lastname: ""
+          postalCode: "0000"
+        expected:
+          message: Last Name is required
+      - desc: no postal code provided
+        request:
+          firstname: "Anonymous"
+          lastname: "Anonymous"
+          postalCode: ""
+        expected:
+          message: Postal Code is required

@@ -1,0 +1,75 @@
+services:
+  pull-browsers:
+    image: docker:latest
+    container_name: selenoid-pull-browsers
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: >
+      sh -c "
+        docker pull selenoid/vnc:chrome_128.0 &&
+        docker pull selenoid/vnc:firefox_125.0
+      "
+    networks:
+      - selenoid
+
+  selenoid:
+    image: aerokube/selenoid:latest-release
+    container_name: selenoid
+    restart: always
+    depends_on:
+      pull-browsers:
+        condition: service_completed_successfully
+    ports:
+      - "4444:4444"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./config/logs:/var/selenoid/logs"
+      - "./config/video:/var/selenoid/video"
+      - "./config/:/etc/selenoid/:ro"
+    environment:
+      - OVERRIDE_VIDEO_OUTPUT_DIR=./config/video
+    command: [
+      "-conf", "/etc/selenoid/browsers.json",
+      "-limit", "10",
+      "-timeout", "5m",
+      "-enable-file-upload",
+      "-log-output-dir", "/var/selenoid/logs",
+      "-session-attempt-timeout", "2m",
+      "-session-delete-timeout", "2m",
+      "-service-startup-timeout", "2m",
+      "-container-network", "selenoid"
+    ]
+    shm_size: 2g
+    tmpfs:
+      - /tmp
+    networks:
+      - selenoid
+
+  selenoid-ui:
+    image: aerokube/selenoid-ui:latest-release
+    container_name: selenoid-ui
+    links:
+      - selenoid
+    depends_on:
+      - selenoid
+    ports:
+      - "8080:8080"
+    command: [ "--selenoid-uri", "http://selenoid:4444" ]
+    networks:
+      - selenoid
+
+  test-runner:
+    build: .
+    container_name: test-runner
+    image: test-with-selenide:latest
+    restart: no
+    depends_on:
+      - selenoid
+      - selenoid-ui
+    networks:
+      - selenoid
+
+networks:
+  selenoid:
+    name: selenoid
+    driver: bridge
