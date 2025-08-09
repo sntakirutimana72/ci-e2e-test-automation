@@ -88,6 +88,20 @@ jobs:
         with:
           name: ${{ github.workflow }}-badges
           path: .github/badges/
+
+      - name: List downloaded badges
+        run: |
+          echo "Listing downloaded badges:"
+          ls -la .github/badges/ || echo "No badges found"
+          # also echo each badge's content
+            for badge in .github/badges/*.json; do
+                if [ -f "$badge" ]; then
+                  echo "Contents of $badge:"
+                  cat "$badge"
+                else
+                  echo "No badge file found at $badge"
+                fi
+            done
           
       - name: Commit and push updated badges
         run: |
