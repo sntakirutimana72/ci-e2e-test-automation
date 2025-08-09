@@ -4,6 +4,7 @@
       <w>aerokube</w>
       <w>brightgreen</w>
       <w>coverallsapp</w>
+      <w>dallure</w>
       <w>dbrowser</w>
       <w>ddata</w>
       <w>ddest</w>
@@ -15,6 +16,7 @@
       <w>dockerd</w>
       <w>doutput</w>
       <w>envs</w>
+      <w>esac</w>
       <w>hermoine</w>
       <w>lete</w>
       <w>mrkdwn</w>
@@ -23,6 +25,8 @@
       <w>operablink</w>
       <w>pcross</w>
       <w>peaceiris</w>
+      <w>pipefail</w>
+      <w>pipestatus</w>
       <w>privatebrowsing</w>
       <w>slackapi</w>
       <w>tbody</w>

@@ -15,10 +15,6 @@ services:
   selenoid:
     image: aerokube/selenoid:latest-release
     container_name: selenoid
-    restart: always
-    depends_on:
-      pull-browsers:
-        condition: service_completed_successfully
     ports:
       - "4444:4444"
     volumes:
@@ -49,11 +45,11 @@ services:
     build: .
     container_name: test-runner
     image: test-with-selenide:latest
-    restart: no
     depends_on:
       - selenoid
     volumes:
       - ./reports:/app/reports
+      - ./m2-cache:/root/.m2
     networks:
       - selenoid
 

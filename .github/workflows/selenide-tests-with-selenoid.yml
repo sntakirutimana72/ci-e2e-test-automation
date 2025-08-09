@@ -17,13 +17,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run tests with docker compose
-        id: tests
+      - name: Pull browsers
+        run: |
+          docker compose up --build --abort-on-container-exit pull-browsers pull-browsers
+
+      - name: Run tests
         run: |
           set -o pipefail
-          docker compose up --build --exit-code-from test-runner | tee result.log
-          EXIT_CODE=${PIPESTATUS[0]}
-          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+          docker compose up --build --exit-code-from test-runner selenoid test-runner
 
       - name: Cleanup
         if: always()
@@ -45,16 +46,20 @@ jobs:
           path: reports/allure/
           retention-days: 1
 
-      - name: Set job status
-        id: set_status
+      - name: Set test job status
+        if: always()
         run: |
-          if [ "${{ steps.tests.outputs.exit_code }}" -eq 0 ]; then
-            echo "JOB_STATUS=success" >> $GITHUB_ENV
-            echo "SLACK_STATUS_ICON=:white_check_mark: JOB SUCCESS" >> $GITHUB_ENV
-          else
-            echo "JOB_STATUS=failure" >> $GITHUB_ENV
-            echo "SLACK_STATUS_ICON=:x: JOB FAILED" >> $GITHUB_ENV
-          fi
+          case "${{ job.status }}" in
+            success)
+              echo 'SLACK_STATUS_ICON=:white_check_mark: JOB SUCCESS' >> $GITHUB_ENV
+              ;;
+            failure)
+              echo 'SLACK_STATUS_ICON=:x: JOB FAILED' >> $GITHUB_ENV
+              ;;
+            cancelled)
+              echo 'SLACK_STATUS_ICON=:warning: JOB CANCELLED' >> $GITHUB_ENV
+              ;;
+          esac
 
       - name: Slack Notification - Job Finished
         if: always()
@@ -71,16 +76,15 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "Workflow: _${{ github.workflow }}_\n Status: `${{ env.JOB_STATUS }}`\nBranch: _${{ github.ref }}_\nCommit: `${{ github.sha }}`\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
-  
+                  text: "Workflow: _${{ github.workflow }}_`\nCommit: `${{ github.sha }}`\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+
   publish-badges:
     runs-on: ubuntu-latest
     needs: test
     if: always()
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Download badges
         uses: actions/download-artifact@v4
@@ -88,20 +92,6 @@ jobs:
         with:
           name: ${{ github.workflow }}-badges
           path: .github/badges/
-
-      - name: List downloaded badges
-        run: |
-          echo "Listing downloaded badges:"
-          ls -la .github/badges/ || echo "No badges found"
-          # also echo each badge's content
-            for badge in .github/badges/*.json; do
-                if [ -f "$badge" ]; then
-                  echo "Contents of $badge:"
-                  cat "$badge"
-                else
-                  echo "No badge file found at $badge"
-                fi
-            done
           
       - name: Commit and push updated badges
         run: |
@@ -122,8 +112,7 @@ jobs:
     if: always()
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Download allure results
         uses: actions/download-artifact@v4
@@ -131,11 +120,6 @@ jobs:
         with:
           name: ${{ github.workflow }}-allure-results
           path: allure-results/
-
-      - name: List Allure results
-        run: |
-          echo "Listing Allure results directories:"
-          ls -la allure-results/ || echo "No allure results found"
 
       - name: Combine Allure results
         run: |
@@ -178,13 +162,13 @@ jobs:
         run: |
           case "${{ job.status }}" in
             success)
-              echo "REPORT_STATUS_ICON=:white_check_mark: REPORT GENERATED" >> $GITHUB_ENV
+              echo 'REPORT_STATUS_ICON=:white_check_mark: REPORT GENERATED' >> $GITHUB_ENV
               ;;
             failure)
-              echo "REPORT_STATUS_ICON=:x: REPORT FAILED" >> $GITHUB_ENV
+              echo 'REPORT_STATUS_ICON=:x: REPORT FAILED' >> $GITHUB_ENV
               ;;
             cancelled)
-              echo "REPORT_STATUS_ICON=:warning: REPORT CANCELLED" >> $GITHUB_ENV
+              echo 'REPORT_STATUS_ICON=:warning: REPORT CANCELLED' >> $GITHUB_ENV
               ;;
           esac
 
@@ -203,4 +187,4 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "Workflow: _${{ github.workflow }}_\n Branch: _${{ github.ref }}_\n:globe_with_meridians: <https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}|View Allure Report>\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                  text: "Workflow: _${{ github.workflow }}_\n:globe_with_meridians: <https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}|View Allure Report>\n:link: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"

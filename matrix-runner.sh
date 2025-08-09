@@ -25,6 +25,11 @@ ALLURE_RESULTS_DIR="reports/allure"
 BADGES_DIR="reports/badges"
 
 # ==========================
+# 2.2. Track exit status
+# ==========================
+OVERALL_STATUS=0
+
+# ==========================
 # 3. Run tests for each browser
 # ==========================
 for b in "${browsers[@]}"; do
@@ -43,7 +48,12 @@ for b in "${browsers[@]}"; do
     -Dbrowser="$browser" \
     -Dbrowser.version="$version" \
     -Dallure.results.directory="$ALLURE_BROWSER_RESULTS_DIR"
+  status=$?
   set -e
+
+  if [[ $status -ne 0 ]]; then
+    OVERALL_STATUS=1
+  fi
 
   echo "=== Finished $browser $version ==="
 
@@ -84,3 +94,5 @@ for b in "${browsers[@]}"; do
   echo "{\"schemaVersion\":1,\"label\":\"$browser:$version Tests\",\"message\":\"$PASSED/$TOTAL ($PERCENT%)\",\"color\":\"$COLOR\"}" \
     > "$BADGES_DIR/$browser-$version.json"
 done
+
+exit $OVERALL_STATUS

@@ -1,7 +1,7 @@
 target/
 tmp/
-config/
-!config/browsers.json
+config/logs
+config/video
 allure-results/
 .allure/
 reports/
@@ -9,6 +9,15 @@ screenshots/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+### Any .log or .sqlite or .db or sqlite3 ###
+*.log
+*.sqlite
+*.db
+*.sqlite3
+
+### Cache ###
+**/*cache*/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
