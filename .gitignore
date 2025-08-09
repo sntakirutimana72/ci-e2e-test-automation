@@ -4,6 +4,7 @@ config/
 !config/browsers.json
 allure-results/
 .allure/
+reports/
 screenshots/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

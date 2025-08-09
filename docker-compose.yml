@@ -45,19 +45,6 @@ services:
     networks:
       - selenoid
 
-  selenoid-ui:
-    image: aerokube/selenoid-ui:latest-release
-    container_name: selenoid-ui
-    links:
-      - selenoid
-    depends_on:
-      - selenoid
-    ports:
-      - "8080:8080"
-    command: [ "--selenoid-uri", "http://selenoid:4444" ]
-    networks:
-      - selenoid
-
   test-runner:
     build: .
     container_name: test-runner
@@ -65,7 +52,8 @@ services:
     restart: no
     depends_on:
       - selenoid
-      - selenoid-ui
+    volumes:
+      - ./reports:/app/reports
     networks:
       - selenoid
 

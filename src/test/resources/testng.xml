@@ -4,23 +4,9 @@
     <listener class-name="allure.AllureSuccessAndFailureTestListener"/>
   </listeners>
 
-  <test name="Chrome Tests">
-    <parameter name="browser" value="chrome"/>
-    <parameter name="version" value="128.0"/>
-
-    <classes>
-      <class name="tests.login.LoginTest"/>
-      <class name="tests.product.InventoryTest"/>
-      <class name="tests.cart.CartTest"/>
-      <class name="tests.checkout.BillingInfoTest"/>
-      <class name="tests.checkout.OverviewTest"/>
-      <class name="tests.checkout.CompleteTest"/>
-    </classes>
-  </test>
-
-  <test name="Firefox Tests">
-    <parameter name="browser" value="firefox"/>
-    <parameter name="version" value="125.0"/>
+  <test name="Cross-Browser Tests">
+    <parameter name="browser" value="${browser}"/>
+    <parameter name="version" value="${browser.version}"/>
 
     <classes>
       <class name="tests.login.LoginTest"/>
