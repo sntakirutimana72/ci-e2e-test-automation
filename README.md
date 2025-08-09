@@ -1,3 +1,6 @@
+![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sntakirutimana72/ci-e2e-test-automation/refs/heads/selenide-test-with-selenoid-hub/.github/badges/chrome-128.0.json)
+![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/sntakirutimana72/ci-e2e-test-automation/refs/heads/selenide-test-with-selenoid-hub/.github/badges/firefox-125.0.json)
+
 # 🧪 Selenide Test Suite with Selenoid/Selenium Grid
 
 This project is a containerized functional UI test suite built using **Selenide** and designed for scalable execution on **Selenoid** or **Selenium Grid**. It features a Dockerized setup for clean, consistent test runs and includes CI integration via **GitHub Actions**.

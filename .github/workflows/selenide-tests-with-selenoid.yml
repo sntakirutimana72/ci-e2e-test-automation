@@ -21,7 +21,7 @@ jobs:
         id: tests
         run: |
           set -o pipefail
-          docker compose up --build --abort-on-container-exit --exit-code-from test-runner | tee result.log
+          docker compose up --build --exit-code-from test-runner | tee result.log
           EXIT_CODE=${PIPESTATUS[0]}
           echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
 
