@@ -2,7 +2,8 @@ name: Selenide Tests with Selenoid
 
 on:
   push:
-    branches: [ selenide-tests-with-selenoid ]
+    branches:
+      - selenide-test-with-selenoid-hub
     paths-ignore:
       - '.github/badges/**'
 
