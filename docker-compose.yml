@@ -3,25 +3,62 @@ services:
     image: docker:latest
     container_name: selenoid-pull-browsers
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - /var/run/docker.sock:/var/run/docker.sock
     command: >
       sh -c "
         docker pull selenoid/vnc:chrome_128.0 &&
         docker pull selenoid/vnc:firefox_125.0
       "
     networks:
-      - selenoid
+      - jenkins
+
+  jenkins-controller:
+    image: jenkins/jenkins:jdk17
+    container_name: jenkins-controller
+    restart: on-failure
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    networks:
+      - jenkins
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+
+  jenkins-agent:
+    build: jenkins/agent
+    container_name: jenkins-agent
+    restart: on-failure
+    user: root
+    environment:
+      - JENKINS_URL=http://jenkins-controller:8080
+      - JENKINS_AGENT_NAME=agent-1
+      - JENKINS_SECRET=${JENKINS_AGENT_SECRET}
+      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
+    depends_on:
+      - jenkins-controller
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./:/workspace:cached
+    networks:
+      - jenkins
 
   selenoid:
     image: aerokube/selenoid:latest-release
     container_name: selenoid
     ports:
       - "4444:4444"
+    depends_on:
+      - pull-browsers
+    restart: always
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "./config/logs:/var/selenoid/logs"
-      - "./config/video:/var/selenoid/video"
-      - "./config/:/etc/selenoid/:ro"
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/logs:/var/selenoid/logs
+      - ./config/video:/var/selenoid/video
+      - ./config/:/etc/selenoid/:ro
     environment:
       - OVERRIDE_VIDEO_OUTPUT_DIR=./config/video
     command: [
@@ -53,7 +90,13 @@ services:
     networks:
       - selenoid
 
+volumes:
+  jenkins_home:
+
 networks:
+  jenkins:
+    name: jenkins
+    driver: bridge
   selenoid:
     name: selenoid
     driver: bridge

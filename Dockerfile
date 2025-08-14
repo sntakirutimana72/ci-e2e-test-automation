@@ -2,6 +2,8 @@ FROM maven:3.9.6-eclipse-temurin-17
 
 WORKDIR /app
 
+RUN ls -ls
+
 # Copy project files
 COPY pom.xml .
 COPY .env.test .

@@ -2,7 +2,9 @@
   <dictionary name="project">
     <words>
       <w>aerokube</w>
+      <w>blueocean</w>
       <w>brightgreen</w>
+      <w>certdir</w>
       <w>coverallsapp</w>
       <w>dallure</w>
       <w>dbrowser</w>
@@ -13,11 +15,13 @@
       <w>dheadless</w>
       <w>dind</w>
       <w>djacoco</w>
+      <w>djenkins</w>
       <w>dockerd</w>
       <w>doutput</w>
       <w>envs</w>
       <w>esac</w>
       <w>hermoine</w>
+      <w>jenkinsci</w>
       <w>lete</w>
       <w>mrkdwn</w>
       <w>noreply</w>
