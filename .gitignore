@@ -16,6 +16,10 @@ screenshots/
 *.db
 *.sqlite3
 
+# Env files
+.env*
+!.env.test
+
 ### Cache ###
 **/*cache*/
 
