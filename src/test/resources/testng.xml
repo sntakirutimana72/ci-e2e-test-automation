@@ -9,4 +9,10 @@
       <class name="tests.auth.LoginTest"/>
     </classes>
   </test>
+
+  <test name="Product Tests">
+    <classes>
+      <class name="tests.products.FindProductTest"/>
+    </classes>
+  </test>
 </suite>
