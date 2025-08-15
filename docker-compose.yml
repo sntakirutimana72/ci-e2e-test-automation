@@ -16,7 +16,7 @@ services:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
   jenkins-agent:
-    build: jenkins/agent
+    image: jenkins/inbound-agent:jdk17
     container_name: jenkins-agent
     restart: on-failure
     user: root
@@ -24,24 +24,11 @@ services:
       - JENKINS_URL=http://jenkins-controller:8080
       - JENKINS_AGENT_NAME=agent-1
       - JENKINS_SECRET=${JENKINS_AGENT_SECRET}
-      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
+      - JENKINS_AGENT_WORKDIR=/home/jenkins
     depends_on:
       - jenkins-controller
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./:/workspace:cached
-    networks:
-      - jenkins
-
-  test-runner:
-    build: .
-    container_name: test-runner
-    image: fakeapi-rest-assured:latest
-    depends_on:
-      - api_testing
-    volumes:
-      - ./reports:/app/reports
-      - ./m2-cache:/root/.m2
     networks:
       - jenkins
 
