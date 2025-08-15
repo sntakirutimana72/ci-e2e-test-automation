@@ -1,0 +1,8 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Fri Aug 15 17:07:42 UTC 2025","Fri Aug 15 17:07:44 UTC 2025","2303","Api TestSuite","Auth Tests","tests.auth.LoginTest","tests.auth.LoginTest","verifySuccessfulLogin","verifySuccessfulLogin","Verify {desc} can log in successfully with valid credentials"
+"passed","Fri Aug 15 17:07:46 UTC 2025","Fri Aug 15 17:07:47 UTC 2025","426","Api TestSuite","Product Tests","tests.products.FindProductTest","tests.products.FindProductTest","verifyFindProductById","verifyFindProductById",""
+"passed","Fri Aug 15 17:07:46 UTC 2025","Fri Aug 15 17:07:47 UTC 2025","442","Api TestSuite","Product Tests","tests.products.FindProductTest","tests.products.FindProductTest","verifyFindAll","verifyFindAll",""
+"passed","Fri Aug 15 17:07:45 UTC 2025","Fri Aug 15 17:07:46 UTC 2025","1010","Api TestSuite","Auth Tests","tests.auth.LoginTest","tests.auth.LoginTest","verifyLoginFailures","verifyLoginFailures","Verify login fails with {desc}"
+"passed","Fri Aug 15 17:07:46 UTC 2025","Fri Aug 15 17:07:46 UTC 2025","521","Api TestSuite","Auth Tests","tests.auth.LoginTest","tests.auth.LoginTest","verifyLoginFailures","verifyLoginFailures","Verify login fails with {desc}"
+"passed","Fri Aug 15 17:07:44 UTC 2025","Fri Aug 15 17:07:45 UTC 2025","498","Api TestSuite","Auth Tests","tests.auth.LoginTest","tests.auth.LoginTest","verifyLoginFailures","verifyLoginFailures","Verify login fails with {desc}"
+"passed","Fri Aug 15 17:07:42 UTC 2025","Fri Aug 15 17:07:44 UTC 2025","2091","Api TestSuite","Auth Tests","tests.auth.LoginTest","tests.auth.LoginTest","verifyLoginFailures","verifyLoginFailures","Verify login fails with {desc}"
