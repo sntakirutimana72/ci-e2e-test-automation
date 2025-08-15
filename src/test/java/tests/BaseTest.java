@@ -1,78 +1,27 @@
 package tests;
 
-import com.codeborne.selenide.WebDriverRunner;
 import com.util.Envs;
-import com.util.GridDriverProvider;
-import io.qameta.allure.Step;
-import com.codeborne.selenide.Configuration;
 
-import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
+import io.qameta.allure.Step;
+import io.qameta.allure.restassured.AllureRestAssured;
+import io.restassured.RestAssured;
 import org.testng.annotations.*;
 
-import static com.codeborne.selenide.Selenide.open;
+import java.util.function.Supplier;
 
-@Slf4j
 public abstract class BaseTest {
 
   @BeforeSuite
-  public void beforeSuite() {
-    Configuration.baseUrl = Envs.AUT_BASE_URI;
-    Configuration.timeout = 10000;
-  }
+  public void setup() {
+    // Set base URI for Rest-Assured
+    RestAssured.baseURI = Envs.AUT_BASE_URI;
 
-  @BeforeMethod
-  @Parameters({"browser", "version"})
-  public void beforeEach(String browser, String version) {
-    // Set current thread browser and browser version
-    System.setProperty("CURRENT_BROWSER", browser);
-    System.setProperty("CURRENT_BROWSER_VERSION", version);
-
-    // Then set the Configuration.browser to use our custom provider
-    Configuration.browser = GridDriverProvider.class.getName();
-
-    log.info("Browser configuration set - browser: {}, thread: {}", browser, Thread.currentThread().getId());
-  }
-
-  @BeforeMethod(dependsOnMethods = "beforeEach")
-  public void beforeEachNavigateToAUT() {
-    executeStep(
-      "Navigate to " + Configuration.baseUrl,
-      () -> open("")
-    );
-  }
-
-  @AfterMethod(alwaysRun = true)
-  public void afterExample() {
-    WebDriver driver = WebDriverRunner.getWebDriver();
-
-    // Clear cookies
-    driver.manage().deleteAllCookies();
-
-    // Clear localStorage and sessionStorage
-    if (driver instanceof JavascriptExecutor js) {
-      try {
-        js.executeScript("window.localStorage.clear();");
-        js.executeScript("window.sessionStorage.clear();");
-      } catch (Exception e) {
-        log.error("Storage cleanup failed: {}", e.getMessage());
-      }
-    }
-
-    // Optional: Close all open tabs/windows except main one
-    for (String handle : driver.getWindowHandles()) {
-      if (!handle.equals(driver.getWindowHandle())) {
-        driver.switchTo().window(handle).close();
-      }
-    }
-
-    // Switch back to main window
-    driver.switchTo().window(driver.getWindowHandle());
+    // Attached allure filter for logging traffic to Rest-Assured
+    RestAssured.filters(new AllureRestAssured());
   }
 
   @Step("{description}")
-  public static void executeStep(@SuppressWarnings("unused") String description, Runnable action) {
-    action.run();
+  static <T> T step(@SuppressWarnings("unused") String description, Supplier<T> action) {
+    return action.get();
   }
 }

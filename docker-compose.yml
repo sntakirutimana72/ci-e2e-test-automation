@@ -1,17 +1,4 @@
 services:
-  pull-browsers:
-    image: docker:latest
-    container_name: selenoid-pull-browsers
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: >
-      sh -c "
-        docker pull selenoid/vnc:chrome_128.0 &&
-        docker pull selenoid/vnc:firefox_125.0
-      "
-    networks:
-      - jenkins
-
   jenkins-controller:
     image: jenkins/jenkins:jdk17
     container_name: jenkins-controller
@@ -46,49 +33,17 @@ services:
     networks:
       - jenkins
 
-  selenoid:
-    image: aerokube/selenoid:latest-release
-    container_name: selenoid
-    ports:
-      - "4444:4444"
-    depends_on:
-      - pull-browsers
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./config/logs:/var/selenoid/logs
-      - ./config/video:/var/selenoid/video
-      - ./config/:/etc/selenoid/:ro
-    environment:
-      - OVERRIDE_VIDEO_OUTPUT_DIR=./config/video
-    command: [
-      "-conf", "/etc/selenoid/browsers.json",
-      "-limit", "10",
-      "-timeout", "5m",
-      "-enable-file-upload",
-      "-log-output-dir", "/var/selenoid/logs",
-      "-session-attempt-timeout", "2m",
-      "-session-delete-timeout", "2m",
-      "-service-startup-timeout", "2m",
-      "-container-network", "selenoid"
-    ]
-    shm_size: 2g
-    tmpfs:
-      - /tmp
-    networks:
-      - selenoid
-
   test-runner:
     build: .
     container_name: test-runner
-    image: test-with-selenide:latest
+    image: fakeapi-rest-assured:latest
     depends_on:
-      - selenoid
+      - api_testing
     volumes:
       - ./reports:/app/reports
       - ./m2-cache:/root/.m2
     networks:
-      - selenoid
+      - jenkins
 
 volumes:
   jenkins_home:
@@ -96,7 +51,4 @@ volumes:
 networks:
   jenkins:
     name: jenkins
-    driver: bridge
-  selenoid:
-    name: selenoid
     driver: bridge

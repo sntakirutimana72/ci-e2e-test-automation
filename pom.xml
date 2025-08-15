@@ -12,19 +12,15 @@
   </properties>
 
   <dependencies>
-
-    <!-- Selenide: A concise and powerful library for browser automation -->
     <dependency>
-      <groupId>com.codeborne</groupId>
-      <artifactId>selenide</artifactId>
-      <version>7.2.1</version>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>5.4.0</version>
     </dependency>
-
-    <!-- WebDriverManager: Auto-manage browser drivers -->
     <dependency>
-      <groupId>io.github.bonigarcia</groupId>
-      <artifactId>webdrivermanager</artifactId>
-      <version>5.8.0</version>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>json-schema-validator</artifactId>
+      <version>5.4.0</version>
     </dependency>
 
     <!-- TestNG: Testing framework for Java -->
@@ -46,6 +42,11 @@
       <groupId>io.qameta.allure</groupId>
       <artifactId>allure-testng</artifactId>
       <version>2.27.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-rest-assured</artifactId>
+      <version>2.24.0</version>
     </dependency>
 
     <!-- Slf4j and Logback: Logging framework -->
@@ -80,13 +81,6 @@
       <groupId>io.github.cdimascio</groupId>
       <artifactId>dotenv-java</artifactId>
       <version>3.0.0</version>
-    </dependency>
-
-    <!-- Apache Commons: Utility libraries -->
-    <dependency>
-      <groupId>com.ibm.icu</groupId>
-      <artifactId>icu4j</artifactId>
-      <version>75.1</version>
     </dependency>
   </dependencies>
 

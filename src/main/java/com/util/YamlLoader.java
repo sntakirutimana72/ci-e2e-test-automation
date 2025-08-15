@@ -22,7 +22,7 @@ public class YamlLoader {
       // Read YAML as string
       String yamlContent = new String(yis.readAllBytes(), StandardCharsets.UTF_8);
 
-      // Replace ${VAR} with env or .env.test values
+      // Replace ${VAR} with env or .env values
       String interpolated = interpolateEnvVars(yamlContent);
 
       // Parse YAML into POJO
@@ -30,7 +30,7 @@ public class YamlLoader {
 
       return mapper.readValue(interpolated, clazz);
     } catch (Exception e) {
-      throw new RuntimeException("Failed to load YAML test data: " + e.getMessage());
+      throw new RuntimeException("Failed to load YAML test data:~" + e.getMessage());
     }
   }
 
@@ -52,5 +52,3 @@ public class YamlLoader {
     return sb.toString();
   }
 }
-
-

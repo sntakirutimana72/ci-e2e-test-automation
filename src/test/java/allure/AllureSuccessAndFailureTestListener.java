@@ -22,8 +22,6 @@ public class AllureSuccessAndFailureTestListener implements ITestListener {
 
   private void addEnvironmentInfo() {
     Allure.parameter("Environment", System.getProperty("env", "test"));
-    Allure.parameter("Browser", System.getProperty("CURRENT_BROWSER"));
-    Allure.parameter("Browser Version", System.getProperty("CURRENT_BROWSER_VERSION"));
     Allure.parameter("OS", System.getProperty("os.name"));
     Allure.parameter("Java Version", System.getProperty("java.version"));
     Allure.parameter("Timestamp", String.valueOf(System.currentTimeMillis()));

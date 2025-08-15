@@ -1,20 +1,12 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="SelenideGridSuite" parallel="methods" thread-count="3">
+<suite name="Api TestSuite" parallel="methods" thread-count="3">
   <listeners>
     <listener class-name="allure.AllureSuccessAndFailureTestListener"/>
   </listeners>
 
-  <test name="Cross-Browser Tests">
-    <parameter name="browser" value="${browser}"/>
-    <parameter name="version" value="${browser.version}"/>
-
+  <test name="Auth Tests">
     <classes>
-      <class name="tests.login.LoginTest"/>
-      <class name="tests.product.InventoryTest"/>
-      <class name="tests.cart.CartTest"/>
-      <class name="tests.checkout.BillingInfoTest"/>
-      <class name="tests.checkout.OverviewTest"/>
-      <class name="tests.checkout.CompleteTest"/>
+      <class name="tests.auth.LoginTest"/>
     </classes>
   </test>
 </suite>

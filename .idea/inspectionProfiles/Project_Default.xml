@@ -11,6 +11,7 @@
           <option value="ci-e2e-test-automation" />
           <option value="ci-e2e-test-automation" />
           <option value="ci-e2e-test-automation" />
+          <option value="ci-e2e-test-automation" />
         </list>
       </option>
       <option name="ignoredPackages">
@@ -20,6 +21,7 @@
           <option value="org.bouncycastle:bcprov-jdk18on:1.76" />
           <option value="commons-codec:commons-codec:1.11" />
           <option value="org.apache.commons:commons-lang3:3.14.0" />
+          <option value="org.apache.commons:commons-lang3:3.11" />
         </list>
       </option>
       <option name="ignoredReasons">
@@ -29,6 +31,7 @@
           <option value="No big deal for now" />
           <option value="Not a biggie" />
           <option value="Not a biggie" />
+          <option value="No biggie" />
         </list>
       </option>
     </inspection_tool>

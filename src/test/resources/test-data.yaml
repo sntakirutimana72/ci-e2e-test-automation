@@ -1,84 +1,36 @@
 login:
-  failure:
-    - desc: No username or password provided
-      request:
-        username: ""
-        password: ""
-      expected:
-        message: Username is required
-    - desc: No password provided
-      request:
-        username: ${STANDARD_USER}
-        password: ""
-      expected:
-        message: Password is required
+  invalid:
     - desc: No username provided
       request:
-        username: ""
         password: ${ANY_USER_PASS}
       expected:
-        message: Username is required
+        status: 400
+        message: username and password are not provided in JSON format
+    - desc: No password provided
+      request:
+        username: ${SELECTED_USER}
+      expected:
+        status: 400
+        message: username and password are not provided in JSON format
     - desc: Invalid username
       request:
         username: invalid_user
         password: ${ANY_USER_PASS}
       expected:
-        message: Username and password do not match any user in this service
+        status: 401
+        message: username or password is incorrect
     - desc: Invalid password
       request:
-        username: ${STANDARD_USER}
+        username: ${SELECTED_USER}
         password: invalid_pass
       expected:
-        message: Username and password do not match any user in this service
-    - desc: Blocked user
+        status: 401
+        message: username or password is incorrect
+  valid:
+    - desc: Login with valid credentials
       request:
-        username: ${LOCKED_OUT_USER}
+        username: ${SELECTED_USER}
         password: ${ANY_USER_PASS}
       expected:
-        message: Sorry, this user has been locked out.
-  success:
-    - desc: as standard user
-      request:
-        username: ${STANDARD_USER}
-        password: ${ANY_USER_PASS}
-      expected:
-
-checkout:
-  billingInfo:
-    valid:
-      - desc: Valid billing info
-        request:
-          firstname: "Anonymous"
-          lastname: "Anonymous"
-          postalCode: "0000"
-        expected:
-          message:
-    invalid:
-      - desc: no billing info provided
-        request:
-          firstname: ""
-          lastname: ""
-          postalCode: ""
-        expected:
-          message: First Name is required
-      - desc: no firstname provided
-        request:
-          firstname: ""
-          lastname: "Anonymous"
-          postalCode: "0000"
-        expected:
-          message: First Name is required
-      - desc: no lastname provided
-        request:
-          firstname: "Anonymous"
-          lastname: ""
-          postalCode: "0000"
-        expected:
-          message: Last Name is required
-      - desc: no postal code provided
-        request:
-          firstname: "Anonymous"
-          lastname: "Anonymous"
-          postalCode: ""
-        expected:
-          message: Postal Code is required
+        status: 201
+        schema: schemas/auth/loggedIn.json
