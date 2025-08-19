@@ -8,7 +8,7 @@ pipeline {
   }
 
   triggers {
-    githubPush()   // listens to GitHub webhook
+    githubPush()
   }
 
   tools {
@@ -18,7 +18,6 @@ pipeline {
 
   options {
     timeout(time: 30, unit: 'MINUTES')
-    skipDefaultCheckout(true)
   }
 
   stages {
