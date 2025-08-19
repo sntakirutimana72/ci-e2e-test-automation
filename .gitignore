@@ -45,6 +45,7 @@ screenshots/
 /nbbuild/
 /dist/
 /nbdist/
+temp/
 /.nb-gradle/
 build/
 !**/src/main/**/build/

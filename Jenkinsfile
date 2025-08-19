@@ -7,6 +7,10 @@ pipeline {
     GH_CURRENT_BRANCH = 'api-testing-with-jenkins-ci'
   }
 
+  triggers {
+    githubPush()   // listens to GitHub webhook
+  }
+
   tools {
     maven 'Maven 3.8.6'
     jdk 'JDK 17'
@@ -24,7 +28,7 @@ pipeline {
           retry(3) {
             git url: "https://github.com/${GH_USER}/${GH_REPO}.git", branch: "${GH_CURRENT_BRANCH}"
           }
-        } 
+        }
       }
     }
 
@@ -215,13 +219,14 @@ pipeline {
           script {
             try {
               sh '''
+                git remote set-url origin "https://${GH_USER}:${GH_TOKEN}@github.com/${GH_USER}/${GH_REPO}.git"
                 git add .jenkins/badges/*.json
 
                 if git diff --cached --quiet; then
                   echo "No badge changes to commit."
                 else
                   git commit -m "Update test badges"
-                  git push -f "https://${GH_USER}:${GH_TOKEN}@github.com/${GH_USER}/${GH_REPO}.git" ${GH_CURRENT_BRANCH}
+                  git push origin ${GH_CURRENT_BRANCH}
                 fi
               '''
             } catch (Exception e) {
@@ -343,9 +348,12 @@ pipeline {
       script {
         def testResults = ""
         if (fileExists('.jenkins/badges/jenkins-ci.json')) {
-          def badgeContent = readFile('.jenkins/badges/jenkins-ci.json')
-          def badge = readJSON text: badgeContent
-          testResults = " | Tests: ${badge.message}"
+          try {
+            def badge = readJSON file: '.jenkins/badges/jenkins-ci.json'
+            testResults = " | Tests: ${badge.message ?: 'N/A'}"
+          } catch (e) {
+            echo "Failed to parse badge JSON: ${e.message}"
+          }
         }
 
         slackSend(
