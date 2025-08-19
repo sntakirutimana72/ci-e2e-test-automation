@@ -8,8 +8,7 @@
     "price",
     "description",
     "category",
-    "image",
-    "rating"
+    "image"
   ],
   "properties": {
     "id": {

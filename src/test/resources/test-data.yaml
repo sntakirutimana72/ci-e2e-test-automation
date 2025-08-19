@@ -34,3 +34,96 @@ login:
       expected:
         status: 201
         schema: schemas/auth/loggedIn.json
+
+products:
+  create:
+    valid:
+      - request:
+          title: new test product title
+          price: 2.3
+          description: test description
+          category: test-category
+          image: https://fakestoreapi.com/img/test-image.jpg
+        expected:
+          status: 201
+          schema: schemas/products/single.json
+    invalid:
+      - desc: missing title
+        request:
+          price: 2.3
+          description: test description
+          category: test-category
+          image: https://fakestoreapi.com/img/test-image.jpg
+        expected:
+          status: 400
+      - desc: missing price
+        request:
+          title: new test product title
+          description: test description
+          category: test-category
+          image: https://fakestoreapi.com/img/test-image.jpg
+        expected:
+          status: 400
+      - desc: missing description
+        request:
+          title: new test product title
+          price: 2.3
+          category: test-category
+          image: https://fakestoreapi.com/img/test-image.jpg
+        expected:
+          status: 400
+      - desc: missing category
+        request:
+          title: new test product title
+          price: 2.3
+          description: test description
+          image: https://fakestoreapi.com/img/test-image.jpg
+        expected:
+          status: 400
+      - desc: missing image
+        request:
+          title: new test product title
+          price: 2.3
+          description: test description
+          category: test-category
+        expected:
+          status: 400
+  patch:
+    valid:
+      - request:
+          id: 1
+          price: 2.73
+        expected:
+          status: 200
+          schema: schemas/products/single.json
+    invalid:
+      - desc: price as non-numeric value
+        request:
+          id: 1
+          price: "non-numeric"
+        expected:
+          status: 400
+      - desc: category as non-string value
+        request:
+          id: 1
+          category: 12345
+        expected:
+          status: 400
+      - desc: description as non-string value
+        request:
+          id: 1
+          description: 12345
+        expected:
+          status: 400
+      - desc: title as non-string value
+        request:
+          id: 1
+          title: 12345
+        expected:
+          status: 400
+      - desc: image as non-string value
+        request:
+          id: 1
+          image: 12345
+        expected:
+          status: 400

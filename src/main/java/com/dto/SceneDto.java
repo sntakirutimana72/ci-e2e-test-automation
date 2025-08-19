@@ -1,9 +1,5 @@
 package com.dto;
 
-import lombok.Data;
+import java.util.Map;
 
-@Data
-public class SceneDto {
-  private RequestDto request;
-  private ExpectedResponseDto expected;
-}
+public record SceneDto(Map<String, Object> request, ExpectedResponseDto expected) {}

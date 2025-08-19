@@ -13,6 +13,8 @@
   <test name="Product Tests">
     <classes>
       <class name="tests.products.FindProductTest"/>
+      <class name="tests.products.CreateProductTest"/>
+      <class name="tests.products.PatchProductTest"/>
     </classes>
   </test>
 </suite>

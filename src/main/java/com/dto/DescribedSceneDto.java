@@ -1,10 +1,5 @@
 package com.dto;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.Map;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class DescribedSceneDto extends SceneDto {
-  private String desc;
-}
+public record DescribedSceneDto(String desc, Map<String, Object> request, ExpectedResponseDto expected) {}
