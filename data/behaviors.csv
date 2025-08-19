@@ -1,0 +1,6 @@
+"Epic","Feature","Story","FAILED","BROKEN","PASSED","SKIPPED","UNKNOWN"
+"","Authentication","TRA-1: As a User, I want to be able to log in with credentials and receive an access token","0","0","5","0","0"
+"Ordering System","","As a merchant, I want to be able to add new products to inventory","5","5","1","0","0"
+"Ordering System","","As a client, I want to be able view all available products","0","0","1","0","0"
+"Ordering System","","As a merchant, I want to be able to update existing products","0","1","0","0","0"
+"Ordering System","","As a client, I want to be able to a particular details","0","0","1","0","0"
