@@ -1,0 +1,9 @@
+feed:
+  validation:
+    emptyMessage: Email field cannot be empty
+    invalidMessage: Valid email required
+  subscribe:
+    validEmail: test@email.com
+    invalidEmail: test
+  success:
+    title: Thanks for subscribing!
