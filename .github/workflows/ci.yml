@@ -48,7 +48,7 @@ jobs:
         id: extract_coverage_summary
         run: |
           echo "Installing libxml2-utils & tidy dependencies for parsing coverage summary"
-          sudo apt install -y libxml2-utils tidy
+          sudo apt-get update && apt-get install -y libxml2-utils tidy
           
           echo "Clean the HTML into XHTML so xmllint can parse it"
           tidy -q -asxhtml -numeric target/site/jacoco/index.html > target/site/jacoco/clean.html
@@ -62,7 +62,7 @@ jobs:
           echo 'EOF' >> $GITHUB_OUTPUT
 
       - name: Generate JaCoCo badge
-        uses: cicirello/jacoco-badge-generator@v3
+        uses: cicirello/jacoco-badge-generator@v2
         with:
           jacoco-csv-file: target/site/jacoco/jacoco.csv
 
