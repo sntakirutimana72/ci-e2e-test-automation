@@ -1,8 +1,9 @@
 name: CI
 
 on:
-  push:
-    branches: [ main ]
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -42,6 +43,44 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: target/site/jacoco/jacoco.xml
+
+      - name: Extract coverage table
+        id: extract_coverage_summary
+        run: |
+          echo "Installing libxml2-utils & tidy dependencies for parsing coverage summary"
+          sudo apt install -y libxml2-utils tidy
+          
+          echo "Clean the HTML into XHTML so xmllint can parse it"
+          tidy -q -asxhtml -numeric target/site/jacoco/index.html > target/site/jacoco/clean.html
+          
+          echo "Extract just the first table (coverage summary)"
+          xmllint --html --xpath "//table[1]" target/site/jacoco/clean.html > coverage-table.html
+          
+          echo "Store the extracted coverage summary table for GitHub Actions output"
+          echo 'table<<EOF' >> $GITHUB_OUTPUT
+          cat coverage-table.html >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+
+      - name: Generate JaCoCo badge
+        uses: cicirello/jacoco-badge-generator@v3
+        with:
+          jacoco-csv-file: target/site/jacoco/jacoco.csv
+
+      - name: Convert badge to base64
+        id: badge
+        run: echo "data:image/svg+xml;base64,$(base64 -w 0 badges/jacoco.svg)" >> $GITHUB_OUTPUT
+
+      - name: Post coverage summary comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## ✅ Code Coverage
+
+            <img src="${{ steps.badge.outputs.badge }}" alt="Coverage Badge" />
+
+            ### Coverage Report
+            ${{ steps.extract.outputs.table }}
 
       - name: Set success icon
         if: success()
